@@ -49,7 +49,7 @@
   THINGS FOR ARMAN TO EDIT — search this file for "TODO-" to find each one.
   -----------------------------------------------------------------------------
   TODO-1  Replace resume.pdf whenever you update your resume (see README).
-  TODO-2  Fill in the og:url / canonical URL once the site has a domain.
+  TODO-2  Optional: add share-image.jpg for a richer link preview.
   TODO-3  Optional: add a portrait photo (slot is commented out in the hero).
   TODO-4  Optional: add real projects (scaffold commented out before Contact).
   TODO-5  Update the "looking for work" line once you land a role.
@@ -63,14 +63,20 @@
   <title>Arman Kirakosyan — Marketing Graduate</title>
   <meta name="description" content="Arman Kirakosyan is a marketing graduate in Marquette, Michigan, with 18 months of experience running social media channels, producing digital content, and handling office administration for a university department." />
 
-  <!-- Social sharing preview.
-       TODO-2: replace the URL below once the site is live at a real domain,
-       and (optional) add an image at share-image.jpg for a richer preview. -->
+  <!-- Canonical address of the live site. -->
+  <link rel="canonical" href="https://arman-kirakosyan.github.io/" />
+
+  <!-- Social sharing preview: controls the card that appears when this link is
+       posted on LinkedIn, in a message, or in an email.
+       TODO-2 (optional): for a richer card with a picture, save a 1200x630
+       image next to this file as share-image.jpg and uncomment the og:image
+       and twitter:* lines below. -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Arman Kirakosyan — Marketing Graduate" />
   <meta property="og:description" content="Social media, digital content, and Google Ads certified. Marquette, Michigan." />
-  <!-- <meta property="og:url" content="https://your-domain-here.com" /> -->
-  <!-- <meta property="og:image" content="https://your-domain-here.com/share-image.jpg" /> -->
+  <meta property="og:url" content="https://arman-kirakosyan.github.io/" />
+  <!-- <meta property="og:image" content="https://arman-kirakosyan.github.io/share-image.jpg" /> -->
+  <!-- <meta name="twitter:card" content="summary_large_image" /> -->
 
   <!-- Favicon: an inline "AK" monogram, so there is no extra file to manage. -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F0410F'/%3E%3Ctext x='50' y='72' font-family='Helvetica,Arial,sans-serif' font-weight='bold' font-size='58' fill='%2314110F' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" />

@@ -95,24 +95,46 @@ replace the form's `data-mailto` attribute with
 
 ---
 
-## Publishing it
+## The live site
 
-Any static host works, and all of these are free:
+**https://arman-kirakosyan.github.io**
 
-**Netlify Drop** — go to <https://app.netlify.com/drop> and drag this whole
-folder onto the page. Live in about ten seconds. Easiest option.
+Hosted on GitHub Pages from the public repo
+[arman-kirakosyan/arman-kirakosyan.github.io](https://github.com/arman-kirakosyan/arman-kirakosyan.github.io).
+HTTPS is enforced; plain `http://` redirects automatically.
 
-**GitHub Pages** — create a repository, upload these files, then in
-Settings → Pages set the source to your main branch. Your site appears at
-`https://yourusername.github.io/repository-name`.
+### Updating the site
 
-**Cloudflare Pages / Vercel** — connect the repository and deploy. No build
-command and no output directory are needed; it is already plain HTML.
+Edit the files here, then run these three commands from this folder:
 
-Once it is live, add the URL to your resume and your LinkedIn profile, and fill
-in TODO-2 above.
+```
+git add -A
+git commit -m "Describe what you changed"
+git push
+```
 
----
+GitHub rebuilds the site automatically. It usually goes live within about a
+minute. If it does not, check the Actions tab of the repo for a failed build.
+
+### Notes on this setup
+
+- The repo is **public**. That is required for GitHub Pages on the free plan;
+  Pages from a private repo needs GitHub Pro. Being public does not let anyone
+  edit it — only you can push. And a website's HTML, CSS, and JavaScript is
+  readable by any visitor through "View Source" regardless of the repo, so a
+  private repo would not have hidden the code anyway.
+- The repo is named `arman-kirakosyan.github.io` on purpose. GitHub treats a
+  repo matching your username as a "user site" and serves it at the short URL
+  above instead of a longer `/repo-name/` path.
+- `.nojekyll` stops GitHub running the files through Jekyll.
+- Git identity is set **locally in this repo only**, so your global git config
+  is untouched.
+
+### If you ever want your own domain
+
+Buy a domain, add a `CNAME` file containing just the domain name, and point
+your DNS at GitHub. Then update the `canonical` and `og:url` tags in
+`index.html` to match. Roughly $10-15 a year.
 
 ## Checks already done
 
