@@ -770,7 +770,11 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
 
 .certs__list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+  /* Explicit three columns, not auto-fit: with five certificates that gives a
+     guaranteed 3-over-2 layout. auto-fit would recompute the column count from
+     the available width, so a browser zoom or a larger default font size could
+     silently turn it into 4-over-1. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.75rem, 2vw, 1.25rem);
 }
 .cert {
@@ -992,6 +996,8 @@ a.contact__value:hover { color: var(--flame); }
   /* Drop the spanning too, so six cards tile evenly as 2x3. */
   .skills__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .skill-card--wide { grid-column: auto; }
+  /* Three certificate cards side by side get cramped here; go two across. */
+  .certs__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .role { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .role__meta { grid-auto-flow: column; justify-content: start; align-items: center; gap: 0.75rem; }
@@ -999,7 +1005,7 @@ a.contact__value:hover { color: var(--flame); }
 
 @media (max-width: 620px) {
   .brand__name { display: none; }
-  .skills__grid, .edu__grid { grid-template-columns: minmax(0, 1fr); }
+  .skills__grid, .edu__grid, .certs__list { grid-template-columns: minmax(0, 1fr); }
   .skill-card--wide { grid-column: auto; }
   .btn-row { flex-direction: column; align-items: stretch; }
   .btn { justify-content: center; }
