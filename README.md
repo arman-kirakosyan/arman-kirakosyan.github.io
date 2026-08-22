@@ -142,6 +142,11 @@ HTTPS is enforced; plain `http://` redirects automatically.
 
 ### Updating the site
 
+**If you change `styles.css` or `script.js`, bump the `?v=` number** on the two
+references in `index.html`. GitHub Pages tells browsers to keep those files for
+10 minutes, so without a new number your edit can look like it never deployed
+while the browser quietly serves the old copy.
+
 Edit the files here, then run these three commands from this folder:
 
 ```
