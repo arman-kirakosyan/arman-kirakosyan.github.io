@@ -541,17 +541,102 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
 .skill-card__note { font-size: 0.9rem; color: var(--ink-3); margin-bottom: 1.1rem; }
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.tags li {
+
+/* Each skill is a button: clicking it shows the resume line it comes from
+   in the panel above the grid. Styled to look like a chip, not a form control. */
+.tag {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: inherit;
+  text-align: left;
+  color: var(--ink-2);
   border: 1px solid var(--line);
   background: rgba(18, 16, 14, 0.03);
   padding: 0.35rem 0.7rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--ink-2);
-  transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s,
+              transform 0.2s var(--ease);
 }
-.skill-card:hover .tags li { border-color: rgba(255, 61, 0, 0.35); }
-.tags li:hover { background: var(--flame); color: var(--ink); border-color: var(--flame); transform: translateY(-2px); }
+.skill-card:hover .tag { border-color: rgba(255, 61, 0, 0.35); }
+.tag:hover {
+  background: var(--flame);
+  color: var(--ink);
+  border-color: var(--flame);
+  transform: translateY(-2px);
+}
+/* The skill currently shown in the panel. */
+.tag[aria-current="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.tag[aria-current="true"]:hover { background: var(--flame); color: var(--ink); border-color: var(--flame); }
+
+/* ---- provenance panel ---- */
+.skills__wrap { position: relative; }
+
+.prov {
+  position: sticky;
+  top: 5.25rem;
+  z-index: 20;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  background: var(--ink);
+  color: var(--paper);
+  border-left: 5px solid var(--flame);
+  padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.1rem, 3vw, 1.75rem);
+  box-shadow: 0 14px 34px rgba(18, 16, 14, 0.16);
+}
+/* Without JavaScript the buttons cannot do anything, so do not promise it. */
+.prov { display: none; }
+.js .prov { display: block; }
+
+.prov__hint {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(248, 244, 236, 0.75);
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.prov__hintmark { color: var(--flame); font-size: 1.05rem; flex: 0 0 auto; }
+
+.prov__skill {
+  margin: 0 0 0.3rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.prov__meta {
+  margin: 0 0 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+.prov__quote {
+  margin: 0 0 0.7rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line-dark);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--paper);
+}
+.prov__src {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(248, 244, 236, 0.55);
+}
+/* Fades the swapped-in content so the change is noticeable but not jumpy. */
+.prov__inner { animation: provIn 0.35s var(--ease-out); }
+@keyframes provIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* ------------------------------------------------------------ experience */
 .timeline { display: grid; gap: clamp(2rem, 4vw, 3.25rem); }
@@ -914,6 +999,13 @@ a.contact__value:hover { color: var(--flame); }
   .btn-row { flex-direction: column; align-items: stretch; }
   .btn { justify-content: center; }
   .role__meta { grid-auto-flow: row; gap: 0.3rem; }
+  /* Static rather than sticky: on a short screen a pinned panel would cover
+     most of the grid. The script scrolls it into view on click instead. */
+  .prov { position: static; }
+  .prov__quote { font-size: 0.92rem; }
+  /* Roomier tap targets: these chips are buttons, and 35px is tight for a
+     thumb. This brings them to roughly 44px, the usual phone guidance. */
+  .tag { padding: 0.6rem 0.85rem; }
   .certs__title { flex-wrap: wrap; }
   .site-footer__inner { justify-content: flex-start; gap: 0.4rem 1.25rem; }
 }
@@ -928,6 +1020,7 @@ a.contact__value:hover { color: var(--flame); }
   [data-tilt] { transform: none !important; }
   [data-tilt]::after { display: none; }
   .js [data-reveal] { opacity: 1; transform: none; }
+  .prov__inner { animation: none; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
@@ -948,4 +1041,5 @@ a.contact__value:hover { color: var(--flame); }
   .js [data-reveal] { opacity: 1 !important; transform: none !important; }
   .section__head::after { transform: scaleX(1) !important; }
   [data-tilt] { transform: none !important; }
+  .prov { position: static !important; box-shadow: none !important; }
 }

@@ -196,70 +196,172 @@
           <h2 class="section__title">Skills</h2>
         </header>
 
-        <!-- Items tagged with a quoted resume line come from the Experience or
-             Profile sections rather than the resume's Core Skills list. -->
-        <div class="skills__grid">
-          <article class="skill-card skill-card--wide" data-reveal data-tilt>
-            <h3 class="skill-card__title">Marketing &amp; Digital</h3>
-            <ul class="tags">
-              <li>Social media content creation</li>
-              <li>Social media channel management</li>
-              <li>Campaign development</li>
-              <li>Search engine optimization (SEO)</li>
-              <li>Google Ads</li>
-              <li>Copywriting</li><!-- "concept, copywriting, graphic design, and video editing" -->
-              <li>Content direction</li><!-- "directing and creating content" -->
-              <li>Informational material production</li><!-- "Produced and distributed informational materials" -->
-            </ul>
-          </article>
+        <div class="skills__wrap">
+          <!-- Provenance panel. Clicking a skill writes the matching resume line
+               into here. The evidence lives in data- attributes on each button,
+               so editing a skill and editing its source happen in one place. -->
+          <div class="prov" id="provPanel" aria-live="polite">
+            <div class="prov__inner" id="provInner">
+              <p class="prov__hint">
+                <span class="prov__hintmark" aria-hidden="true">&#9432;</span>
+                Every skill below is traceable. Click any one to see the exact line
+                on my resume it comes from.
+              </p>
+            </div>
+          </div>
 
-          <article class="skill-card" data-reveal data-tilt>
-            <h3 class="skill-card__title">Content &amp; Design</h3>
-            <ul class="tags">
-              <li>Graphic design</li>
-              <li>Video editing</li>
-              <li>Front-end web design</li>
-              <li>Marketing collateral</li>
-            </ul>
-          </article>
-
-          <article class="skill-card" data-reveal data-tilt>
-            <h3 class="skill-card__title">Business &amp; Administrative</h3>
-            <ul class="tags">
-              <li>Office administration</li>
-              <li>Budget and fundraising management</li>
-              <li>Scheduling</li>
-              <li>Recordkeeping</li>
-              <li>Correspondence</li>
-              <li>Chapter finances and banking</li><!-- "Managed chapter finances, banking, and fundraising activity" -->
-              <li>Caseload management</li><!-- "across an active student caseload" -->
-              <li>Microsoft Word</li>
-              <li>Excel</li>
-              <li>PowerPoint</li>
-              <li>Outlook</li>
-            </ul>
-          </article>
-
-          <article class="skill-card" data-reveal data-tilt>
-            <h3 class="skill-card__title">Communication &amp; Collaboration</h3>
-            <ul class="tags">
-              <li>Direct communication under pressure</li><!-- profile line -->
-              <li>Conflict de-escalation</li><!-- "De-escalated confrontations on the field" -->
-              <li>Real-time decision-making</li><!-- "making and defending real-time decisions" -->
-              <li>Team coordination</li><!-- "Coordinated near-daily with fellow referees" -->
-              <li>Communicating with international audiences</li>
-              <li>Executive board service</li>
-            </ul>
-          </article>
-
-          <article class="skill-card" data-reveal data-tilt>
-            <h3 class="skill-card__title">AI Tools</h3>
-            <p class="skill-card__note">Applied use for research, content drafting, and workflow efficiency.</p>
-            <ul class="tags">
-              <li>Claude</li>
-              <li>Perplexity</li>
-            </ul>
-          </article>
+          <div class="skills__grid">
+            <article class="skill-card skill-card--wide" data-reveal data-tilt>
+              <h3 class="skill-card__title">Marketing &amp; Digital</h3>
+              <ul class="tags">
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Social media content creation" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Managed multiple social media channels for the International Programs Office, directing and creating content for prospective and current international students">Social media content creation</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Social media channel management" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Managed multiple social media channels for the International Programs Office">Social media channel management</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Campaign development" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Developed and ran social media campaigns end to end: concept, copywriting, graphic design, and video editing">Campaign development</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Search engine optimization (SEO)" data-org="Resume — Profile"
+                    data-role="" data-section="Profile"
+                    data-quote="working skills in search engine optimization, graphic design, video editing, and front-end web design">Search engine optimization (SEO)</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Google Ads" data-org="Resume — Certifications"
+                    data-role="" data-section="Certifications"
+                    data-quote="Google: AI-Powered Shopping Ads Certification, Google Ads Apps Certification, Google Ads Display Certification">Google Ads</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Copywriting" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Developed and ran social media campaigns end to end: concept, copywriting, graphic design, and video editing">Copywriting</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Content direction" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="directing and creating content for prospective and current international students">Content direction</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Informational material production" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Produced and distributed informational materials reaching prospective and current international students">Informational material production</button></li>
+              </ul>
+            </article>
+            <article class="skill-card" data-reveal data-tilt>
+              <h3 class="skill-card__title">Content &amp; Design</h3>
+              <ul class="tags">
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Graphic design" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Developed and ran social media campaigns end to end: concept, copywriting, graphic design, and video editing">Graphic design</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Video editing" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Developed and ran social media campaigns end to end: concept, copywriting, graphic design, and video editing">Video editing</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Front-end web design" data-org="Resume — Profile"
+                    data-role="" data-section="Profile"
+                    data-quote="working skills in search engine optimization, graphic design, video editing, and front-end web design">Front-end web design</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Marketing collateral" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Content and Design: Graphic design, video editing, front-end web design, marketing collateral">Marketing collateral</button></li>
+              </ul>
+            </article>
+            <article class="skill-card" data-reveal data-tilt>
+              <h3 class="skill-card__title">Business &amp; Administrative</h3>
+              <ul class="tags">
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Office administration" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Job title"
+                    data-quote="Office Administrator and Social Media Administrator">Office administration</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Budget and fundraising management" data-org="Refugee Outreach Collective, NMU Chapter"
+                    data-role="Executive Board Member and Treasurer · Sep 2024 – May 2026" data-section="Experience"
+                    data-quote="Managed chapter finances, banking, and fundraising activity as Treasurer">Budget and fundraising management</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Scheduling" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Handled correspondence, appointment scheduling, and student records across an active student caseload">Scheduling</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Recordkeeping" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Handled correspondence, appointment scheduling, and student records across an active student caseload">Recordkeeping</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Correspondence" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Handled correspondence, appointment scheduling, and student records across an active student caseload">Correspondence</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Chapter finances and banking" data-org="Refugee Outreach Collective, NMU Chapter"
+                    data-role="Executive Board Member and Treasurer · Sep 2024 – May 2026" data-section="Experience"
+                    data-quote="Managed chapter finances, banking, and fundraising activity as Treasurer">Chapter finances and banking</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Caseload management" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Handled correspondence, appointment scheduling, and student records across an active student caseload">Caseload management</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Microsoft Word" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Microsoft Office (Word, Excel, PowerPoint, Outlook)">Microsoft Word</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Excel" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Microsoft Office (Word, Excel, PowerPoint, Outlook)">Excel</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="PowerPoint" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Microsoft Office (Word, Excel, PowerPoint, Outlook)">PowerPoint</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Outlook" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Microsoft Office (Word, Excel, PowerPoint, Outlook)">Outlook</button></li>
+              </ul>
+            </article>
+            <article class="skill-card" data-reveal data-tilt>
+              <h3 class="skill-card__title">Communication &amp; Collaboration</h3>
+              <ul class="tags">
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Direct communication under pressure" data-org="Resume — Profile"
+                    data-role="" data-section="Profile"
+                    data-quote="Nine years officiating soccer built composure and direct communication under pressure">Direct communication under pressure</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Conflict de-escalation" data-org="United States Soccer Federation"
+                    data-role="Soccer Referee · Mar 2017 – Jan 2026" data-section="Experience"
+                    data-quote="De-escalated confrontations on the field, holding position under pressure while staying professional and fair">Conflict de-escalation</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Real-time decision-making" data-org="United States Soccer Federation"
+                    data-role="Soccer Referee · Mar 2017 – Jan 2026" data-section="Experience"
+                    data-quote="Officiated matches for nine years, making and defending real-time decisions in front of players, coaches, and spectators">Real-time decision-making</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Team coordination" data-org="United States Soccer Federation"
+                    data-role="Soccer Referee · Mar 2017 – Jan 2026" data-section="Experience"
+                    data-quote="Coordinated near-daily with fellow referees to align on positioning and calls">Team coordination</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Communicating with international audiences" data-org="Northern Michigan University, International Programs Office"
+                    data-role="Office Administrator and Social Media Administrator · Nov 2024 – May 2026" data-section="Experience"
+                    data-quote="Produced and distributed informational materials reaching prospective and current international students">Communicating with international audiences</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Executive board service" data-org="Refugee Outreach Collective, NMU Chapter"
+                    data-role="Executive Board Member and Treasurer · Sep 2024 – May 2026" data-section="Job title"
+                    data-quote="Executive Board Member and Treasurer (Volunteer)">Executive board service</button></li>
+              </ul>
+            </article>
+            <article class="skill-card" data-reveal data-tilt>
+              <h3 class="skill-card__title">AI Tools</h3>
+              <p class="skill-card__note">Applied use for research, content drafting, and workflow efficiency.</p>
+              <ul class="tags">
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Claude" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Applied use of AI tools including Claude and Perplexity for research, content drafting, and workflow efficiency">Claude</button></li>
+                <li><button type="button" class="tag" aria-controls="provPanel"
+                    data-skill="Perplexity" data-org="Resume — Core Skills"
+                    data-role="" data-section="Core Skills"
+                    data-quote="Applied use of AI tools including Claude and Perplexity for research, content drafting, and workflow efficiency">Perplexity</button></li>
+              </ul>
+            </article>
+          </div>
         </div>
       </div>
     </section>

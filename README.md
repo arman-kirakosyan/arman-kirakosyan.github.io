@@ -22,6 +22,29 @@ Your phone number is on the resume but is **deliberately not published on the
 site** — email and LinkedIn are the contact routes. Anyone who downloads the
 resume still gets it.
 
+### Skill provenance (the clickable skills)
+
+Every skill in the Skills section is a button. Clicking it shows the exact line
+from your resume that skill comes from, in the panel above the grid.
+
+The evidence lives in `data-` attributes on each button in `index.html`:
+
+```
+<button type="button" class="tag"
+        data-skill="Conflict de-escalation"
+        data-org="United States Soccer Federation"
+        data-role="Soccer Referee · Mar 2017 – Jan 2026"
+        data-section="Experience"
+        data-quote="De-escalated confrontations on the field, ...">
+```
+
+So a skill and its source are edited in the same place. **To add a skill you
+must also give it a source** — that is the point of the feature. All 31 quotes
+currently on the site are verbatim text from your resume PDF.
+
+If you ever change your resume wording, update the matching `data-quote` so the
+site and the PDF do not contradict each other.
+
 ### About the Skills section
 
 The first items in each card are the resume's own **Core Skills** list. Some
@@ -150,6 +173,7 @@ every effect is disabled under the OS "reduce motion" setting.
 | Magnetic buttons | Main call-to-action buttons | Drifts toward the cursor, resets on leave |
 | Rule draw | Section headings | Underline scales in as the heading enters view |
 | Staggered reveal | Cards and sections | Siblings arrive in sequence rather than as a block |
+| Provenance panel | Skills section | Sticky on desktop, static on mobile; Escape closes it |
 
 To remove any of them, delete the matching `init...()` call at the bottom of
 `script.js`. Nothing else depends on them.

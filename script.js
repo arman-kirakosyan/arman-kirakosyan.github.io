@@ -190,6 +190,93 @@
     });
   }
 
+  /* Skill provenance --------------------------------------------------
+     Clicking a skill writes the resume line behind it into the panel above
+     the grid. The evidence is held in data- attributes on each button, so a
+     skill and its source are edited in the same place in index.html. */
+  function initSkillProvenance() {
+    var panel = document.getElementById("provPanel");
+    var inner = document.getElementById("provInner");
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".tag[data-skill]"));
+    if (!panel || !inner || !buttons.length) return;
+
+    var hint = inner.innerHTML;   // keep the starting message to restore later
+    var current = null;
+
+    function clearCurrent() {
+      buttons.forEach(function (b) { b.removeAttribute("aria-current"); });
+    }
+
+    function reset() {
+      current = null;
+      clearCurrent();
+      inner.innerHTML = hint;
+    }
+
+    function show(btn) {
+      current = btn;
+      clearCurrent();
+      btn.setAttribute("aria-current", "true");
+
+      var role = btn.getAttribute("data-role") || "";
+      var meta = btn.getAttribute("data-org") + (role ? " \u00b7 " + role : "");
+
+      // Built with DOM methods rather than innerHTML so the resume text is
+      // inserted as text and can never be parsed as markup.
+      var frag = document.createDocumentFragment();
+
+      var h = document.createElement("p");
+      h.className = "prov__skill";
+      h.textContent = btn.getAttribute("data-skill");
+      frag.appendChild(h);
+
+      var m = document.createElement("p");
+      m.className = "prov__meta";
+      m.textContent = meta;
+      frag.appendChild(m);
+
+      var q = document.createElement("blockquote");
+      q.className = "prov__quote";
+      q.textContent = "\u201c" + btn.getAttribute("data-quote") + "\u201d";
+      frag.appendChild(q);
+
+      var s = document.createElement("p");
+      s.className = "prov__src";
+      s.textContent = "Source: resume, " + btn.getAttribute("data-section") + " section";
+      frag.appendChild(s);
+
+      inner.innerHTML = "";
+      inner.appendChild(frag);
+      // Restart the fade so each new selection is visibly a change.
+      inner.style.animation = "none";
+      void inner.offsetWidth;
+      inner.style.animation = "";
+
+      // On narrow screens the panel is static, so bring it into view.
+      if (window.innerWidth <= 620) {
+        var top = panel.getBoundingClientRect().top;
+        if (top < 60 || top > window.innerHeight - 120) {
+          panel.scrollIntoView({ behavior: motionQuery.matches ? "auto" : "smooth", block: "center" });
+        }
+      }
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (current === btn) reset();      // clicking the same skill closes it
+        else show(btn);
+      });
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && current) {
+        var focused = current;
+        reset();
+        focused.focus();
+      }
+    });
+  }
+
   /* Contact form ------------------------------------------------------- */
   function initContactForm() {
     var form = document.getElementById("contactForm");
@@ -254,6 +341,7 @@
   initCounters();
   initTilt();
   initMagnetic();
+  initSkillProvenance();
   initContactForm();
   initYear();
 })();
