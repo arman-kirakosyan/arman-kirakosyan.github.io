@@ -1,27 +1,22 @@
-/* ===========================================================================
-   ARMAN KIRAKOSYAN — SITE SCRIPT
-   ---------------------------------------------------------------------------
-   Plain JavaScript, no libraries, no build step. Six small independent jobs:
-
-     1. Mobile menu open / close
-     2. Header border appears once you scroll
-     3. Fade sections in as they enter the screen
-     4. Highlight the nav link for the section you are reading
-     5. Contact form -> opens the visitor's email app with the message filled in
-     6. Footer year
-
-   Every block below is wrapped in its own function and guarded with an
-   "if the element is missing, do nothing" check, so deleting any section from
-   index.html will not break the rest of the page.
-   =========================================================================== */
+/* Arman Kirakosyan — site behaviour.
+   Plain JavaScript, no libraries. Each function is independent and bails out
+   if its element is missing, so removing a section from index.html will not
+   break anything else. */
 
 (function () {
   "use strict";
 
-  /* ---------------------------------------------------------------------
-     1. MOBILE MENU
-     The button carries aria-expanded so screen readers announce the state.
-     --------------------------------------------------------------------- */
+  // Live query object, not a cached boolean: the answer can change after load
+  // (the visitor can switch the OS setting without reloading the page).
+  var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var reduceMotion = motionQuery.matches;
+
+  // True only for an actual mouse. Checked per event via e.pointerType rather
+  // than a media query cached at load, which would be wrong for a tablet with
+  // a mouse attached, or if the window's capabilities differ at load time.
+  function isMouse(e) { return e.pointerType === "mouse" && !motionQuery.matches; }
+
+  /* Mobile menu -------------------------------------------------------- */
   function initMobileMenu() {
     var toggle = document.getElementById("navToggle");
     var nav = document.getElementById("primaryNav");
@@ -33,122 +28,169 @@
     }
 
     toggle.addEventListener("click", function () {
-      var isOpen = toggle.getAttribute("aria-expanded") === "true";
-      setOpen(!isOpen);
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
     });
 
-    // Tapping a link should navigate AND close the menu.
-    nav.addEventListener("click", function (event) {
-      if (event.target.closest("a")) setOpen(false);
+    nav.addEventListener("click", function (e) {
+      if (e.target.closest("a")) setOpen(false);
     });
 
-    // Escape closes the menu and returns focus to the button.
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
         setOpen(false);
         toggle.focus();
       }
     });
 
-    // If the window is widened back to desktop, reset the state.
     window.addEventListener("resize", function () {
       if (window.innerWidth > 980) setOpen(false);
     });
   }
 
-  /* ---------------------------------------------------------------------
-     2. STICKY HEADER BORDER
-     --------------------------------------------------------------------- */
-  function initHeaderState() {
+  /* Sticky header border + scroll progress bar ------------------------- */
+  function initScrollChrome() {
     var header = document.getElementById("siteHeader");
-    if (!header) return;
+    var bar = document.getElementById("progress");
 
     function update() {
-      header.classList.toggle("is-stuck", window.scrollY > 12);
+      if (header) header.classList.toggle("is-stuck", window.scrollY > 12);
+      if (bar) {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
+      }
     }
     update();
     window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
   }
 
-  /* ---------------------------------------------------------------------
-     3. SCROLL REVEAL
-     Anything with data-reveal starts faded out (see styles.css) and gets
-     .is-visible the first time it scrolls into view. Older browsers without
-     IntersectionObserver simply show everything immediately.
-     --------------------------------------------------------------------- */
+  /* Scroll reveal ------------------------------------------------------ */
   function initReveal() {
-    var items = document.querySelectorAll("[data-reveal]");
+    var items = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
     if (!items.length) return;
 
-    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduceMotion || !("IntersectionObserver" in window)) {
+    function showAll() {
       items.forEach(function (el) { el.classList.add("is-visible"); });
-      return;
     }
+
+    if (reduceMotion || !("IntersectionObserver" in window)) { showAll(); return; }
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target); // reveal once, then stop watching
+        var el = entry.target;
+        // Stagger siblings so a row of cards arrives in sequence, not as a block.
+        var siblings = Array.prototype.slice.call(el.parentNode.children);
+        var index = siblings.indexOf(el);
+        el.style.setProperty("--d", Math.min(index, 5) * 90 + "ms");
+        el.classList.add("is-visible");
+        observer.unobserve(el);
       });
     }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
 
     items.forEach(function (el) { observer.observe(el); });
 
-    // Safety net. This site is used for job applications, so content must
-    // never get stranded invisible — if anything stops the observer from
-    // firing (an extension, a stalled tab, an old browser quirk), show
-    // everything after 2.5 seconds regardless.
-    window.setTimeout(function () {
-      items.forEach(function (el) { el.classList.add("is-visible"); });
-    }, 2500);
+    // Safety net: this site is used for job applications, so content must
+    // never be left invisible if the observer fails to fire for any reason.
+    window.setTimeout(showAll, 2500);
   }
 
-  /* ---------------------------------------------------------------------
-     4. ACTIVE NAV LINK
-     Watches each section and marks the matching nav link .is-active.
-     --------------------------------------------------------------------- */
+  /* Active nav link ---------------------------------------------------- */
   function initScrollSpy() {
     var links = Array.prototype.slice.call(document.querySelectorAll(".nav__link"));
     if (!links.length || !("IntersectionObserver" in window)) return;
 
-    var sections = links
-      .map(function (link) {
-        var id = link.getAttribute("href");
-        return id && id.charAt(0) === "#" ? document.querySelector(id) : null;
-      })
-      .filter(Boolean);
-
+    var sections = links.map(function (link) {
+      var id = link.getAttribute("href");
+      return id && id.charAt(0) === "#" ? document.querySelector(id) : null;
+    }).filter(Boolean);
     if (!sections.length) return;
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         links.forEach(function (link) {
-          link.classList.toggle(
-            "is-active",
-            link.getAttribute("href") === "#" + entry.target.id
-          );
+          link.classList.toggle("is-active", link.getAttribute("href") === "#" + entry.target.id);
         });
       });
     }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
 
-    sections.forEach(function (section) { observer.observe(section); });
+    sections.forEach(function (s) { observer.observe(s); });
   }
 
-  /* ---------------------------------------------------------------------
-     5. CONTACT FORM
-     There is no server behind this site, so instead of posting anywhere the
-     form builds a mailto: link and lets the visitor send from their own email
-     app. The destination address comes from the form's data-mailto attribute
-     in index.html — change it in that one place if the address ever changes.
+  /* Counting numbers in the stats band --------------------------------- */
+  function initCounters() {
+    var nums = Array.prototype.slice.call(document.querySelectorAll("[data-count]"));
+    if (!nums.length) return;
+    if (reduceMotion || !("IntersectionObserver" in window)) return; // leave the final value in place
 
-     Swapping to a hosted form service (Formspree, Netlify Forms, etc.)?
-     Give the <form> a real action/method in index.html and delete this whole
-     function plus its call at the bottom of the file.
-     --------------------------------------------------------------------- */
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        observer.unobserve(el);
+
+        var target = parseInt(el.getAttribute("data-count"), 10);
+        if (isNaN(target)) return;
+        var start = performance.now();
+        var duration = 1100;
+
+        function frame(now) {
+          var p = Math.min(1, (now - start) / duration);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = String(Math.round(target * eased));
+          if (p < 1) requestAnimationFrame(frame);
+          else el.textContent = String(target);
+        }
+        el.textContent = "0";
+        requestAnimationFrame(frame);
+      });
+    }, { threshold: 0.5 });
+
+    nums.forEach(function (n) { observer.observe(n); });
+  }
+
+  /* Cards lean toward the pointer -------------------------------------- */
+  function initTilt() {
+    var MAX_DEG = 5;
+
+    document.querySelectorAll("[data-tilt]").forEach(function (card) {
+      card.addEventListener("pointermove", function (e) {
+        if (!isMouse(e)) return;
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;   // 0 at left edge, 1 at right
+        var py = (e.clientY - r.top) / r.height;
+        card.classList.add("is-tilting");
+        card.style.setProperty("--ry", ((px - 0.5) * MAX_DEG).toFixed(2) + "deg");
+        card.style.setProperty("--rx", ((0.5 - py) * MAX_DEG).toFixed(2) + "deg");
+        card.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+        card.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+      });
+
+      card.addEventListener("pointerleave", function () {
+        card.classList.remove("is-tilting");   // slower transition on the way back
+        card.style.setProperty("--rx", "0deg");
+        card.style.setProperty("--ry", "0deg");
+      });
+    });
+  }
+
+  /* Buttons drift slightly toward the pointer -------------------------- */
+  function initMagnetic() {
+    document.querySelectorAll("[data-magnetic]").forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        if (!isMouse(e)) return;
+        var r = el.getBoundingClientRect();
+        var dx = e.clientX - (r.left + r.width / 2);
+        var dy = e.clientY - (r.top + r.height / 2);
+        el.style.transform = "translate(" + (dx * 0.15).toFixed(1) + "px," +
+                                            (dy * 0.25).toFixed(1) + "px)";
+      });
+      el.addEventListener("pointerleave", function () { el.style.transform = ""; });
+    });
+  }
+
+  /* Contact form ------------------------------------------------------- */
   function initContactForm() {
     var form = document.getElementById("contactForm");
     if (!form) return;
@@ -174,62 +216,44 @@
       });
     }
 
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
       clearErrors();
 
       var name = form.elements.name.value.trim();
       var email = form.elements.email.value.trim();
       var message = form.elements.message.value.trim();
-      var valid = true;
+      var ok = true;
 
-      if (!name) {
-        showError(form.elements.name.closest(".field"), "Please add your name.");
-        valid = false;
-      }
-      // Deliberately loose check: something, an @, something, a dot, something.
-      if (!/^\S+@\S+\.\S+$/.test(email)) {
-        showError(form.elements.email.closest(".field"), "Please add a valid email address.");
-        valid = false;
-      }
-      if (!message) {
-        showError(form.elements.message.closest(".field"), "Please add a message.");
-        valid = false;
-      }
+      if (!name) { showError(form.elements.name.closest(".field"), "Please add your name."); ok = false; }
+      if (!/^\S+@\S+\.\S+$/.test(email)) { showError(form.elements.email.closest(".field"), "Please add a valid email address."); ok = false; }
+      if (!message) { showError(form.elements.message.closest(".field"), "Please add a message."); ok = false; }
 
-      if (!valid) {
+      if (!ok) {
         if (note) note.textContent = "Please fix the highlighted fields.";
         return;
       }
 
-      var subject = "Website enquiry from " + name;
-      var body = message + "\n\n—\n" + name + "\n" + email;
+      window.location.href = "mailto:" + address +
+        "?subject=" + encodeURIComponent("Website enquiry from " + name) +
+        "&body=" + encodeURIComponent(message + "\n\n—\n" + name + "\n" + email);
 
-      window.location.href =
-        "mailto:" + address +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(body);
-
-      if (note) {
-        note.textContent =
-          "Opening your email app. If nothing happens, email " + address + " directly.";
-      }
+      if (note) note.textContent = "Opening your email app. If nothing happens, email " + address + " directly.";
     });
   }
 
-  /* ---------------------------------------------------------------------
-     6. FOOTER YEAR
-     --------------------------------------------------------------------- */
   function initYear() {
     var el = document.getElementById("year");
     if (el) el.textContent = String(new Date().getFullYear());
   }
 
-  /* --------------------------- start everything --------------------------- */
   initMobileMenu();
-  initHeaderState();
+  initScrollChrome();
   initReveal();
   initScrollSpy();
+  initCounters();
+  initTilt();
+  initMagnetic();
   initContactForm();
   initYear();
 })();

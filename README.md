@@ -54,8 +54,8 @@ Nothing was added for these, because the resume does not contain them:
 - Specific software you were not documented as using. Canva, Adobe, Hootsuite,
   Buffer, Google Analytics, Meta Business Suite and similar tools are **not**
   on the site, even though someone doing your job would plausibly use them.
-  If you actually use any of them, tell Claude and they can be added — and put
-  them on your resume at the same time.
+  If you actually use any of them, add them here and on your resume at the
+  same time.
 
 ---
 
@@ -135,6 +135,24 @@ minute. If it does not, check the Actions tab of the repo for a failed build.
 Buy a domain, add a `CNAME` file containing just the domain name, and point
 your DNS at GitHub. Then update the `canonical` and `og:url` tags in
 `index.html` to match. Roughly $10-15 a year.
+
+## How the motion works
+
+All of it degrades safely — the page is fully readable with JavaScript off, and
+every effect is disabled under the OS "reduce motion" setting.
+
+| Effect | Where | Notes |
+|---|---|---|
+| Letter rise | Hero name | Pure CSS, staggered by a `--i` variable per letter |
+| Progress bar | Top of viewport | Scales with scroll position |
+| Counting numbers | Stats band | Falls back to the final number if animation is off |
+| Card tilt + glow | Skill, education, certification cards | Mouse only — checks `pointerType` per event, so a touch never triggers it |
+| Magnetic buttons | Main call-to-action buttons | Drifts toward the cursor, resets on leave |
+| Rule draw | Section headings | Underline scales in as the heading enters view |
+| Staggered reveal | Cards and sections | Siblings arrive in sequence rather than as a block |
+
+To remove any of them, delete the matching `init...()` call at the bottom of
+`script.js`. Nothing else depends on them.
 
 ## Checks already done
 
