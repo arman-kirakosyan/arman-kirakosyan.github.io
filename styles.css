@@ -769,14 +769,19 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
 .certs__meta { margin: 0; font-family: var(--mono); font-size: 0.78rem; color: var(--ink-3); }
 
 .certs__list {
-  display: grid;
-  /* Explicit three columns, not auto-fit: with five certificates that gives a
-     guaranteed 3-over-2 layout. auto-fit would recompute the column count from
-     the available width, so a browser zoom or a larger default font size could
-     silently turn it into 4-over-1. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.75rem, 2vw, 1.25rem);
+  --cert-gap: clamp(0.75rem, 2vw, 1.25rem);
+  /* Flex rather than grid so a short final row centres itself. Grid drops
+     items into fixed tracks, which left-aligns the last two of five.
+     Widths are pinned to a third of the row (not left to auto-fit) so the
+     count cannot drift with browser zoom or a larger default font size.
+     The 0.02px trim absorbs sub-pixel rounding, which can otherwise push the
+     third card onto its own line. */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--cert-gap);
 }
+.cert { flex: 0 1 calc((100% - 2 * var(--cert-gap)) / 3 - 0.02px); }
 .cert {
   position: relative;
   display: grid;
@@ -997,7 +1002,7 @@ a.contact__value:hover { color: var(--flame); }
   .skills__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .skill-card--wide { grid-column: auto; }
   /* Three certificate cards side by side get cramped here; go two across. */
-  .certs__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cert { flex-basis: calc((100% - var(--cert-gap)) / 2 - 0.02px); }
 
   .role { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .role__meta { grid-auto-flow: column; justify-content: start; align-items: center; gap: 0.75rem; }
@@ -1005,7 +1010,8 @@ a.contact__value:hover { color: var(--flame); }
 
 @media (max-width: 620px) {
   .brand__name { display: none; }
-  .skills__grid, .edu__grid, .certs__list { grid-template-columns: minmax(0, 1fr); }
+  .skills__grid, .edu__grid { grid-template-columns: minmax(0, 1fr); }
+  .cert { flex-basis: 100%; }
   .skill-card--wide { grid-column: auto; }
   .btn-row { flex-direction: column; align-items: stretch; }
   .btn { justify-content: center; }
