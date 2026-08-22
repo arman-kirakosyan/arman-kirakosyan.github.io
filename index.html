@@ -1,0 +1,698 @@
+<!doctype html>
+<!--
+===============================================================================
+  ARMAN KIRAKOSYAN — PERSONAL SITE
+  Single-page site. Plain HTML + CSS + a little vanilla JS. No build step.
+  Files: index.html · styles.css · script.js · resume.pdf
+
+  -----------------------------------------------------------------------------
+  SITE OUTLINE (every line below is taken from the resume — nothing invented)
+  -----------------------------------------------------------------------------
+  HEADER   Sticky nav, "AK" mark, mobile menu toggle.
+
+  HERO     Name: Arman Kirakosyan
+           Status: Marketing graduate | Marquette, Michigan
+           Lede: paraphrase of the resume PROFILE section
+           CTAs: Get in touch / Download resume
+
+  STATS    Four numbers, each traceable to the resume:
+           18 months experience · 3 Google certifications ·
+           9 years officiating · 2 fluent languages
+
+  01 ABOUT     Prose version of PROFILE + EXPERIENCE. Side card: location,
+               what he is looking for, languages, driver's license.
+
+  02 SKILLS    Resume's own CORE SKILLS groupings, verbatim items:
+               Marketing & Digital / Content & Design /
+               Business & Administrative / AI Tools
+
+  03 EXPERIENCE  Three roles exactly as listed, with resume bullets:
+               1. NMU International Programs Office (Nov 2024 – May 2026)
+               2. United States Soccer Federation   (Mar 2017 – Jan 2026)
+               3. Refugee Outreach Collective, NMU  (Sep 2024 – May 2026)
+
+  04 EDUCATION & CERTIFICATIONS
+               BS Marketing, NMU, May 2026
+               Study Abroad, Universitat Autonoma de Barcelona, Summer 2025
+               3 Google certifications
+
+  (PROJECTS)   DELIBERATELY OMITTED — the resume lists no projects or portfolio
+               pieces, so there was nothing truthful to put here. An empty
+               scaffold is commented out above the Contact section if you ever
+               want to add real work. See comment marked "OPTIONAL SECTION".
+
+  05 CONTACT   Email, LinkedIn, location, resume download, mail form.
+               Phone number deliberately left off at Arman's request — it is
+               still on the resume PDF, just not published on the page.
+
+  -----------------------------------------------------------------------------
+  THINGS FOR ARMAN TO EDIT — search this file for "TODO-" to find each one.
+  -----------------------------------------------------------------------------
+  TODO-1  Replace resume.pdf whenever you update your resume (see README).
+  TODO-2  Fill in the og:url / canonical URL once the site has a domain.
+  TODO-3  Optional: add a portrait photo (slot is commented out in the hero).
+  TODO-4  Optional: add real projects (scaffold commented out before Contact).
+  TODO-5  Update the "looking for work" line once you land a role.
+===============================================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Arman Kirakosyan — Marketing Graduate</title>
+  <meta name="description" content="Arman Kirakosyan is a marketing graduate in Marquette, Michigan, with 18 months of experience running social media channels, producing digital content, and handling office administration for a university department." />
+
+  <!-- Social sharing preview.
+       TODO-2: replace the URL below once the site is live at a real domain,
+       and (optional) add an image at share-image.jpg for a richer preview. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Arman Kirakosyan — Marketing Graduate" />
+  <meta property="og:description" content="Social media, digital content, and Google Ads certified. Marquette, Michigan." />
+  <!-- <meta property="og:url" content="https://your-domain-here.com" /> -->
+  <!-- <meta property="og:image" content="https://your-domain-here.com/share-image.jpg" /> -->
+
+  <!-- Favicon: an inline "AK" monogram, so there is no extra file to manage. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F0410F'/%3E%3Ctext x='50' y='72' font-family='Helvetica,Arial,sans-serif' font-weight='bold' font-size='58' fill='%2314110F' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Flags that JavaScript is available. styles.css only hides the
+       scroll-reveal elements when this class is present, so visitors
+       with JavaScript turned off still see the full page. -->
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ========================= HEADER / NAV ========================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container site-header__inner">
+      <a class="brand" href="#top" aria-label="Arman Kirakosyan, back to top">
+        <span class="brand__mark" aria-hidden="true">AK</span>
+        <span class="brand__name">Arman Kirakosyan</span>
+      </a>
+
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        aria-expanded="false"
+        aria-controls="primaryNav"
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="nav-toggle__label">Menu</span>
+      </button>
+
+      <nav class="nav" id="primaryNav" aria-label="Primary">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#about">About</a></li>
+          <li><a class="nav__link" href="#skills">Skills</a></li>
+          <li><a class="nav__link" href="#experience">Experience</a></li>
+          <li><a class="nav__link" href="#education">Education</a></li>
+          <li><a class="nav__link nav__link--cta" href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============================ HERO ============================ -->
+    <section class="hero" id="top">
+      <div class="container">
+        <p class="eyebrow">Marketing Graduate <span aria-hidden="true">&middot;</span> Marquette, Michigan</p>
+
+        <h1 class="hero__name">
+          <span class="hero__line">Arman</span>
+          <span class="hero__line hero__line--accent">Kirakosyan</span>
+        </h1>
+
+        <!--
+          TODO-3 (optional): want a photo in the hero? Uncomment this block and
+          drop a square image in the folder named portrait.jpg. Keep the alt
+          text describing the photo, not decorating it.
+
+          <figure class="hero__portrait">
+            <img src="portrait.jpg" alt="Portrait of Arman Kirakosyan" width="480" height="480" />
+          </figure>
+        -->
+
+        <div class="hero__grid">
+          <div class="hero__col">
+            <p class="hero__lede">
+              Marketing graduate with 18 months of experience running social media
+              channels, producing digital content, and handling office administration
+              for a university department.
+            </p>
+            <p class="hero__sub">
+              Google Ads certified in Shopping, Apps, and Display, with working skills
+              in search engine optimization, graphic design, video editing, and
+              front-end web design.
+            </p>
+          </div>
+
+          <div class="hero__col hero__col--actions">
+            <!-- TODO-5: update or delete this line once you have accepted a role. -->
+            <p class="availability">
+              <span class="availability__dot" aria-hidden="true"></span>
+              Seeking an entry-level marketing or sales role in the Marquette area
+            </p>
+
+            <div class="btn-row">
+              <a class="btn btn--primary" href="#contact">Get in touch</a>
+              <!-- TODO-1: resume.pdf sits next to this file. Replace that file
+                   whenever your resume changes; the link never needs editing. -->
+              <a class="btn btn--ghost" href="resume.pdf" download>
+                Download resume
+                <span class="btn__meta">PDF</span>
+              </a>
+            </div>
+
+            <ul class="hero__links">
+              <li>
+                <a href="mailto:armankir4@gmail.com">armankir4@gmail.com</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/in/armankirakos" target="_blank" rel="noopener">
+                  linkedin.com/in/armankirakos
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__rule" aria-hidden="true"></div>
+    </section>
+
+    <!-- =========================== STATS ===========================
+         Every figure here is stated on the resume. Do not add numbers
+         that you cannot point to on the page of your resume. -->
+    <section class="stats" aria-label="Quick facts">
+      <div class="container">
+        <p class="stats__eyebrow">The short version</p>
+      </div>
+      <div class="container stats__grid">
+        <div class="stat" data-reveal>
+          <p class="stat__num">18<span class="stat__unit">mo</span></p>
+          <p class="stat__label">Running social channels for a university department</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__num">3</p>
+          <p class="stat__label">Google certifications: Shopping, Apps, Display</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__num">9<span class="stat__unit">yrs</span></p>
+          <p class="stat__label">Officiating soccer for the U.S. Soccer Federation</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__num">2</p>
+          <p class="stat__label">Languages spoken fluently: English and Armenian</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================== ABOUT =========================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <p class="section__num">01</p>
+          <h2 class="section__title">About</h2>
+        </header>
+
+        <div class="about__grid">
+          <!--
+            VOICE NOTE: the opening sentence below draws a connection between the
+            two roles. The facts in it are all on the resume (18 months, nine
+            years, "making and defending real-time decisions"), but the framing
+            is interpretation, not a resume line. Reword it so it sounds like
+            you, or delete it and start at the next paragraph.
+          -->
+          <div class="about__prose" data-reveal>
+            <p class="lead">
+              For 18 months I ran the social media channels of a university
+              department. For nine years I officiated soccer. Both came down to the
+              same thing: understand the audience in front of you, make the call,
+              and be ready to defend it.
+            </p>
+            <p>
+              I am a marketing graduate based in Marquette, Michigan. At Northern
+              Michigan University&rsquo;s International Programs Office I directed and
+              created content for prospective and current international students,
+              developed campaigns end to end &mdash; concept, copywriting, graphic
+              design, and video editing &mdash; and handled the correspondence,
+              scheduling, and student records that keep a university department
+              running.
+            </p>
+            <p>
+              Alongside that I served on the executive board of the Refugee Outreach
+              Collective chapter at NMU as Treasurer, managing chapter finances,
+              banking, and fundraising, and creating the digital content that promoted
+              our campaigns.
+            </p>
+            <p>
+              The nine years came with the United States Soccer Federation, where I
+              made and defended real-time decisions in front of players, coaches, and
+              spectators, and de-escalated confrontations without losing the room.
+            </p>
+            <p>
+              I am now looking for an entry-level marketing or sales role in the
+              Marquette area.
+              <!-- Good place to add one sentence on the kind of work you want.
+                   Left blank on purpose: your resume does not state a
+                   preference, so anything here had to come from you. -->
+            </p>
+          </div>
+
+          <aside class="about__card" data-reveal>
+            <h3 class="about__card-title">At a glance</h3>
+            <dl class="deflist">
+              <div class="deflist__row">
+                <dt>Based in</dt>
+                <dd>Marquette, Michigan</dd>
+              </div>
+              <div class="deflist__row">
+                <dt>Looking for</dt>
+                <dd>Entry-level marketing or sales, Marquette area</dd>
+              </div>
+              <div class="deflist__row">
+                <dt>Languages</dt>
+                <dd>English (fluent), Armenian (fluent)</dd>
+              </div>
+              <div class="deflist__row">
+                <dt>Also</dt>
+                <dd>Valid driver&rsquo;s license</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================== SKILLS ===========================
+         These are the resume's own four groupings, with its own wording.
+         Add a skill here ONLY if it is on your resume. -->
+    <section class="section section--alt" id="skills">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <p class="section__num">02</p>
+          <h2 class="section__title">Skills</h2>
+        </header>
+
+        <!--
+          SOURCE NOTE — read before editing.
+          The first four cards are the resume's own Core Skills groupings.
+          Items marked "from experience" are NOT in the resume's Core Skills
+          list, but are stated in the resume's own Profile or Experience
+          bullets — the exact source line is quoted beside each one. Nothing
+          here is inferred from what a marketing graduate "probably" knows.
+          If you add anything, add it to your resume too.
+        -->
+        <div class="skills__grid">
+          <article class="skill-card skill-card--wide" data-reveal>
+            <h3 class="skill-card__title">Marketing &amp; Digital</h3>
+            <ul class="tags">
+              <li>Social media content creation</li>
+              <li>Social media channel management</li>
+              <li>Campaign development</li>
+              <li>Search engine optimization (SEO)</li>
+              <li>Google Ads</li>
+              <!-- from experience: "concept, copywriting, graphic design, and video editing" -->
+              <li>Copywriting</li>
+              <!-- from experience: "directing and creating content for prospective and current international students" -->
+              <li>Content direction</li>
+              <!-- from experience: "Produced and distributed informational materials" -->
+              <li>Informational material production</li>
+            </ul>
+          </article>
+
+          <article class="skill-card" data-reveal>
+            <h3 class="skill-card__title">Content &amp; Design</h3>
+            <ul class="tags">
+              <li>Graphic design</li>
+              <li>Video editing</li>
+              <li>Front-end web design</li>
+              <li>Marketing collateral</li>
+            </ul>
+          </article>
+
+          <article class="skill-card" data-reveal>
+            <h3 class="skill-card__title">Business &amp; Administrative</h3>
+            <ul class="tags">
+              <li>Office administration</li>
+              <li>Budget and fundraising management</li>
+              <li>Scheduling</li>
+              <li>Recordkeeping</li>
+              <li>Correspondence</li>
+              <!-- from experience: "Managed chapter finances, banking, and fundraising activity as Treasurer" -->
+              <li>Chapter finances and banking</li>
+              <!-- from experience: "across an active student caseload" -->
+              <li>Caseload management</li>
+              <li>Microsoft Word</li>
+              <li>Excel</li>
+              <li>PowerPoint</li>
+              <li>Outlook</li>
+            </ul>
+          </article>
+
+          <!--
+            This whole card is built from the resume's Profile and Experience
+            sections. None of it appears in the Core Skills list, which is why
+            it was missing before — but every item is documented.
+          -->
+          <article class="skill-card" data-reveal>
+            <h3 class="skill-card__title">Communication &amp; Collaboration</h3>
+            <ul class="tags">
+              <!-- profile: "built composure and direct communication under pressure" -->
+              <li>Direct communication under pressure</li>
+              <!-- from experience: "De-escalated confrontations on the field" -->
+              <li>Conflict de-escalation</li>
+              <!-- from experience: "making and defending real-time decisions" -->
+              <li>Real-time decision-making</li>
+              <!-- from experience: "Coordinated near-daily with fellow referees to align on positioning and calls" -->
+              <li>Team coordination</li>
+              <!-- from experience: content "for prospective and current international students" -->
+              <li>Communicating with international audiences</li>
+              <!-- from experience: "Executive Board Member and Treasurer" -->
+              <li>Executive board service</li>
+            </ul>
+          </article>
+
+          <article class="skill-card" data-reveal>
+            <h3 class="skill-card__title">AI Tools</h3>
+            <p class="skill-card__note">
+              Applied use for research, content drafting, and workflow efficiency.
+            </p>
+            <ul class="tags">
+              <li>Claude</li>
+              <li>Perplexity</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= EXPERIENCE =========================
+         Roles, titles, locations and dates are copied exactly from the
+         resume. Bullets are the resume's bullets, lightly tightened. -->
+    <section class="section" id="experience">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <p class="section__num">03</p>
+          <h2 class="section__title">Experience</h2>
+        </header>
+
+        <div class="timeline">
+
+          <article class="role" data-reveal>
+            <div class="role__meta">
+              <p class="role__dates">Nov 2024 &ndash; May 2026</p>
+              <p class="role__place">Marquette, Michigan</p>
+            </div>
+            <div class="role__body">
+              <h3 class="role__title">Office Administrator and Social Media Administrator</h3>
+              <p class="role__org">Northern Michigan University, International Programs Office</p>
+              <ul class="bullets">
+                <li>
+                  Managed multiple social media channels for the International Programs
+                  Office, directing and creating content for prospective and current
+                  international students.
+                </li>
+                <li>
+                  Developed and ran social media campaigns end to end: concept,
+                  copywriting, graphic design, and video editing.
+                </li>
+                <li>
+                  Produced and distributed informational materials reaching prospective
+                  and current international students.
+                </li>
+                <li>
+                  Handled correspondence, appointment scheduling, and student records
+                  across an active student caseload.
+                </li>
+              </ul>
+              <!-- Each tag restates something in the bullets above. -->
+              <ul class="role__tags">
+                <li>Social media management</li>
+                <li>Campaign development</li>
+                <li>Copywriting</li>
+                <li>Graphic design</li>
+                <li>Video editing</li>
+                <li>Office administration</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="role" data-reveal>
+            <div class="role__meta">
+              <p class="role__dates">Sep 2024 &ndash; May 2026</p>
+              <p class="role__place">Marquette, Michigan</p>
+              <p class="role__badge">Volunteer &middot; Executive Board</p>
+            </div>
+            <div class="role__body">
+              <h3 class="role__title">Executive Board Member and Treasurer</h3>
+              <p class="role__org">Refugee Outreach Collective, Northern Michigan University Chapter</p>
+              <ul class="bullets">
+                <li>
+                  Created digital marketing content promoting the chapter and its
+                  fundraising campaigns.
+                </li>
+                <li>
+                  Managed chapter finances, banking, and fundraising activity as
+                  Treasurer.
+                </li>
+                <li>
+                  Volunteered at multiple fundraising events funding higher education
+                  access for refugees in Malawi.
+                </li>
+              </ul>
+              <ul class="role__tags">
+                <li>Chapter finances and banking</li>
+                <li>Fundraising management</li>
+                <li>Digital marketing content</li>
+                <li>Executive board service</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="role" data-reveal>
+            <div class="role__meta">
+              <p class="role__dates">Mar 2017 &ndash; Jan 2026</p>
+              <p class="role__place">Ann Arbor, Michigan</p>
+            </div>
+            <div class="role__body">
+              <h3 class="role__title">Soccer Referee</h3>
+              <p class="role__org">United States Soccer Federation</p>
+              <ul class="bullets">
+                <li>
+                  Officiated matches for nine years, making and defending real-time
+                  decisions in front of players, coaches, and spectators.
+                </li>
+                <li>
+                  De-escalated confrontations on the field, holding position under
+                  pressure while staying professional and fair.
+                </li>
+                <li>
+                  Coordinated near-daily with fellow referees to align on positioning
+                  and calls.
+                </li>
+              </ul>
+              <ul class="role__tags">
+                <li>Real-time decision-making</li>
+                <li>Conflict de-escalation</li>
+                <li>Composure under pressure</li>
+                <li>Team coordination</li>
+              </ul>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= EDUCATION & CERTIFICATIONS ================= -->
+    <section class="section section--alt" id="education">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <p class="section__num">04</p>
+          <h2 class="section__title">Education &amp; Certifications</h2>
+        </header>
+
+        <div class="edu__grid">
+          <article class="edu-card" data-reveal>
+            <p class="edu-card__date">May 2026</p>
+            <h3 class="edu-card__degree">Bachelor of Science in Marketing</h3>
+            <p class="edu-card__school">Northern Michigan University</p>
+            <p class="edu-card__where">Marquette, Michigan</p>
+          </article>
+
+          <article class="edu-card" data-reveal>
+            <p class="edu-card__date">Summer 2025</p>
+            <h3 class="edu-card__degree">Study Abroad, International Business and Marketing</h3>
+            <p class="edu-card__school">Universitat Autonoma de Barcelona</p>
+            <p class="edu-card__where">Spain</p>
+          </article>
+        </div>
+
+        <div class="certs" data-reveal>
+          <div class="certs__head">
+            <h3 class="certs__title">Certifications</h3>
+            <p class="certs__meta">Three credentials, all issued by Google</p>
+          </div>
+          <ul class="certs__list">
+            <li class="cert">
+              <span class="cert__mark" aria-hidden="true">&#10003;</span>
+              <span class="cert__name">AI-Powered Shopping Ads Certification</span>
+              <span class="cert__issuer">Google</span>
+            </li>
+            <li class="cert">
+              <span class="cert__mark" aria-hidden="true">&#10003;</span>
+              <span class="cert__name">Google Ads Apps Certification</span>
+              <span class="cert__issuer">Google</span>
+            </li>
+            <li class="cert">
+              <span class="cert__mark" aria-hidden="true">&#10003;</span>
+              <span class="cert__name">Google Ads Display Certification</span>
+              <span class="cert__issuer">Google</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!--
+    ============================================================================
+      OPTIONAL SECTION — PROJECTS / WORK SAMPLES        (TODO-4)
+    ============================================================================
+      This section is intentionally EMPTY and commented out. Your resume does
+      not list any projects, portfolio pieces, or named campaigns, so there was
+      nothing verifiable to put here and it was left out rather than padded.
+
+      If you want to add real work later — a campaign you ran for the
+      International Programs Office, a fundraising campaign for Refugee Outreach
+      Collective, a site you designed — delete this comment wrapper and fill in
+      the cards below with things you actually did. Screenshots go in an
+      /images folder. Add nothing you cannot back up in an interview.
+
+    <section class="section" id="work">
+      <div class="container">
+        <header class="section__head">
+          <p class="section__num">05</p>
+          <h2 class="section__title">Selected Work</h2>
+        </header>
+
+        <div class="skills__grid">
+          <article class="skill-card">
+            <h3 class="skill-card__title">Project name here</h3>
+            <p class="skill-card__note">
+              One or two sentences: what it was, what you personally did, and
+              what the outcome was IF you can verify the number.
+            </p>
+            <ul class="tags">
+              <li>Tool or skill used</li>
+              <li>Tool or skill used</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+    -->
+
+    <!-- =========================== CONTACT =========================== -->
+    <section class="section section--dark" id="contact">
+      <div class="container">
+        <header class="section__head section__head--dark" data-reveal>
+          <p class="section__num">05</p>
+          <h2 class="section__title">Contact</h2>
+        </header>
+
+        <div class="contact__grid">
+
+          <div class="contact__intro" data-reveal>
+            <p class="contact__pitch">
+              Open to entry-level marketing and sales roles in the Marquette area.
+              The fastest way to reach me is email.
+            </p>
+
+            <ul class="contact__list">
+              <li>
+                <span class="contact__label">Email</span>
+                <a class="contact__value" href="mailto:armankir4@gmail.com">armankir4@gmail.com</a>
+              </li>
+
+              <li>
+                <span class="contact__label">LinkedIn</span>
+                <a class="contact__value" href="https://www.linkedin.com/in/armankirakos" target="_blank" rel="noopener">linkedin.com/in/armankirakos</a>
+              </li>
+              <li>
+                <span class="contact__label">Location</span>
+                <span class="contact__value contact__value--plain">Marquette, Michigan</span>
+              </li>
+            </ul>
+
+            <a class="btn btn--primary btn--wide" href="resume.pdf" download>
+              Download resume
+              <span class="btn__meta">PDF</span>
+            </a>
+          </div>
+
+          <!--
+            CONTACT FORM
+            This form does NOT need a server. On submit, script.js builds a
+            mailto: link and opens the visitor's own email app with the message
+            pre-filled. The address lives in one place: the data-mailto
+            attribute below.
+
+            Want a form that sends silently in the background instead? Sign up
+            for a free form service such as Formspree, then replace the two
+            attributes below with:
+                action="https://formspree.io/f/YOUR_FORM_ID" method="POST"
+            and delete the form-handling block in script.js.
+          -->
+          <form class="contact-form" id="contactForm" data-mailto="armankir4@gmail.com" novalidate data-reveal>
+            <h3 class="contact-form__title">Send a message</h3>
+
+            <div class="field">
+              <label for="cf-name">Your name</label>
+              <input type="text" id="cf-name" name="name" autocomplete="name" required />
+            </div>
+
+            <div class="field">
+              <label for="cf-email">Your email</label>
+              <input type="email" id="cf-email" name="email" autocomplete="email" required />
+            </div>
+
+            <div class="field">
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" rows="5" required></textarea>
+            </div>
+
+            <button class="btn btn--solid" type="submit">Open in email app</button>
+
+            <p class="contact-form__note" id="formNote" role="status">
+              This opens your own email app with the message ready to send.
+            </p>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p>&copy; <span id="year">2026</span> Arman Kirakosyan</p>
+      <p class="site-footer__meta">Marquette, Michigan</p>
+      <a class="site-footer__top" href="#top">Back to top &uarr;</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
