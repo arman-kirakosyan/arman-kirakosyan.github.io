@@ -519,6 +519,9 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
 .deflist dd { margin: 0; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
 
 /* ---------------------------------------------------------------- skills */
+/* Three columns. The six cards alternate wide (span 2) and narrow (span 1),
+   which fills an exact 3x3 with no holes. Card order in index.html must stay
+   wide, narrow, wide, narrow, wide, narrow for this to hold. */
 .skills__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -767,7 +770,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
 
 .certs__list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
   gap: clamp(0.75rem, 2vw, 1.25rem);
 }
 .cert {
@@ -986,7 +989,9 @@ a.contact__value:hover { color: var(--flame); }
   .hero__grid, .about__grid, .contact__grid { grid-template-columns: minmax(0, 1fr); }
   .about__card { position: static; }
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Drop the spanning too, so six cards tile evenly as 2x3. */
   .skills__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .skill-card--wide { grid-column: auto; }
 
   .role { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .role__meta { grid-auto-flow: column; justify-content: start; align-items: center; gap: 0.75rem; }

@@ -12,6 +12,20 @@ resume.pdf    The file the "Download resume" buttons link to
 
 ---
 
+## Keeping the site and the resume in sync
+
+The site is generated from `resume.pdf`. When you update your resume:
+
+1. Replace `resume.pdf` in this folder.
+2. Check the Skills section. Every skill quotes a line from the resume in its
+   `data-quote` attribute — if you reworded or deleted a bullet, the quote must
+   be updated or the skill removed. **A skill whose source line no longer
+   exists has to come off the site.**
+3. Check the Profile-derived copy: the hero subhead, the availability line, the
+   About closing paragraph, and the contact pitch all paraphrase your Profile.
+4. Check the counts: the stats band and the credential strip both state how
+   many certifications you hold.
+
 ## Where the content came from
 
 Every factual statement on this site is taken from `resume.pdf`. Nothing was
@@ -24,7 +38,7 @@ resume still gets it.
 
 ### Skill provenance (the clickable skills)
 
-Every skill in the Skills section is a button. Clicking it shows the exact line
+All 36 skills in the Skills section are buttons. Clicking it shows the exact line
 from your resume that skill comes from, in the panel above the grid.
 
 The evidence lives in `data-` attributes on each button in `index.html`:
@@ -39,7 +53,7 @@ The evidence lives in `data-` attributes on each button in `index.html`:
 ```
 
 So a skill and its source are edited in the same place. **To add a skill you
-must also give it a source** — that is the point of the feature. All 31 quotes
+must also give it a source** — that is the point of the feature. All 36 quotes
 currently on the site are verbatim text from your resume PDF.
 
 If you ever change your resume wording, update the matching `data-quote` so the
