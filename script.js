@@ -330,15 +330,36 @@
       if (++tries < 60) window.setTimeout(waitForVanta, 100);
     })();
 
-    // Pause the animation whenever the hero is off screen, so it is not
-    // burning CPU while someone reads the rest of the page.
-    if ("IntersectionObserver" in window) {
+    // Stop the animation while the hero is off screen, so it is not burning
+    // CPU and battery for someone reading the rest of the page.
+    //
+    // Two traps here, both learned the hard way:
+    //
+    //   1. This build of Vanta has no pause()/play(). It does keep the handle
+    //      of the frame it scheduled on .req, so cancelling that stops the
+    //      loop, and calling .animationLoop() re-enters it.
+    //   2. Do NOT call .resize() to wake it up. resize() reallocates the p5
+    //      drawing buffer, which wipes the pattern the effect has built up.
+    //      Calling it on every scroll-back visibly degraded the effect.
+    //
+    // .animationLoop() re-schedules itself, so calling it while the loop is
+    // already running leaves two loops racing. Hence the explicit flag.
+    var canToggle = typeof el.ownerDocument.defaultView.requestAnimationFrame === "function";
+    if ("IntersectionObserver" in window && canToggle) {
+      var paused = false;
       var io = new IntersectionObserver(function (entries) {
         var v = window.__heroVanta;
-        if (!v) return;
+        if (!v || typeof v.animationLoop !== "function") return;
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) { if (v.resize) v.resize(); if (v.play) v.play(); }
-          else if (v.pause) v.pause();
+          if (entry.isIntersecting) {
+            if (!paused) return;
+            paused = false;
+            try { v.animationLoop(); } catch (e) { /* leave it stopped */ }
+          } else {
+            if (paused) return;
+            paused = true;
+            try { window.cancelAnimationFrame(v.req); } catch (e) { paused = false; }
+          }
         });
       }, { threshold: 0 });
       io.observe(el);
