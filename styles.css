@@ -5,19 +5,25 @@
 
 /* ---------------------------------------------------------------- tokens */
 :root {
-  --ink:         #12100E;
-  --ink-2:       #463E37;
-  --ink-3:       #6E635A;
-  --paper:       #F8F4EC;
-  --paper-2:     #EFE6D6;
-  --flame:       #FF3D00;
-  --flame-deep:  #B32A00;
-  --teal:        #0A5C54;
-  --amber:       #FFB800;
+  /* Earthy Marquette palette: pine, birch paper, copper, Superior blue-green.
+     The accent exists in three weights because one green cannot serve every
+     job: --pine is a background (paper text sits on it), --pine-deep is accent
+     TEXT on the light sections, --pine-light is accent TEXT on the dark ones.
+     Every pairing is checked against WCAG AA. */
+  --ink:         #131A15;
+  --ink-2:       #414B43;
+  --ink-3:       #5A6458;
+  --paper:       #F4F1E8;
+  --paper-2:     #E7E2D4;
+  --pine:        #1B7350;
+  --pine-deep:   #14563A;
+  --pine-light:  #5FB489;
+  --copper:      #CD7F32;
+  --lake:        #256063;
 
-  --line:        rgba(18, 16, 14, 0.14);
-  --line-hard:   rgba(18, 16, 14, 0.88);
-  --line-dark:   rgba(248, 244, 236, 0.18);
+  --line:        rgba(19, 26, 21, 0.14);
+  --line-hard:   rgba(19, 26, 21, 0.88);
+  --line-dark:   rgba(244, 241, 232, 0.18);
 
   --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -65,7 +71,7 @@ a { color: inherit; }
 img { max-width: 100%; height: auto; display: block; }
 
 :focus-visible {
-  outline: 3px solid var(--flame);
+  outline: 3px solid var(--pine);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -97,7 +103,7 @@ img { max-width: 100%; height: auto; display: block; }
   position: fixed;
   inset: 0 0 auto 0;
   height: 3px;
-  background: var(--flame);
+  background: var(--pine);
   transform: scaleX(0);
   transform-origin: left;
   z-index: 200;
@@ -122,22 +128,49 @@ img { max-width: 100%; height: auto; display: block; }
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--flame-deep);
+  color: var(--pine-deep);
   margin: 0 0 1.5rem;
 }
 
 /* ---------------------------------------------------------------- header */
+/* Two states. The bar starts ink-coloured so it reads as one block with the
+   dark hero below it (it is sticky, so at rest it sits above the hero rather
+   than over it, and transparent would show the light body background through).
+   Once the hero has scrolled past, script.js adds .is-stuck and it becomes the
+   light frosted bar the rest of the page expects. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(248, 244, 236, 0.85);
+  background: var(--ink);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease),
+              color 0.3s var(--ease);
+}
+.site-header.is-stuck {
+  background: rgba(244, 241, 232, 0.85);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+  border-bottom-color: var(--line);
 }
-.site-header.is-stuck { border-bottom-color: var(--line); }
+
+/* --- over the hero --- */
+.site-header .brand__name { color: var(--paper); }
+.site-header .nav__link { color: rgba(244, 241, 232, 0.82); }
+.site-header .nav__link:hover { color: var(--paper); }
+.site-header .nav__link.is-active { color: var(--pine-light); }
+.site-header .nav__link--cta { background: var(--paper); color: var(--ink); }
+.site-header .nav__link--cta:hover { background: var(--pine-light); color: var(--ink); }
+.site-header .nav-toggle { color: var(--paper); border-color: rgba(244, 241, 232, 0.4); }
+
+/* --- past the hero, back to the light bar --- */
+.site-header.is-stuck .brand__name { color: var(--ink); }
+.site-header.is-stuck .nav__link { color: var(--ink-2); }
+.site-header.is-stuck .nav__link:hover { color: var(--ink); }
+.site-header.is-stuck .nav__link.is-active { color: var(--pine-deep); }
+.site-header.is-stuck .nav__link--cta { background: var(--ink); color: var(--paper); }
+.site-header.is-stuck .nav__link--cta:hover { background: var(--pine); color: var(--paper); }
+.site-header.is-stuck .nav-toggle { color: var(--ink); border-color: var(--line-hard); }
 
 .site-header__inner {
   display: flex;
@@ -158,8 +191,8 @@ img { max-width: 100%; height: auto; display: block; }
   display: grid;
   place-items: center;
   width: 2.1rem; height: 2.1rem;
-  background: var(--flame);
-  color: var(--ink);
+  background: var(--pine);
+  color: var(--paper);
   font-weight: 900;
   font-size: 0.85rem;
   letter-spacing: -0.03em;
@@ -178,8 +211,6 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--ink-2);
   transition: color 0.18s;
 }
-.nav__link:hover { color: var(--ink); }
-.nav__link.is-active { color: var(--flame-deep); }
 
 .nav__link:not(.nav__link--cta) { position: relative; }
 .nav__link:not(.nav__link--cta)::after {
@@ -187,7 +218,7 @@ img { max-width: 100%; height: auto; display: block; }
   position: absolute;
   left: 0.75rem; right: 0.75rem; bottom: 0.3rem;
   height: 2px;
-  background: var(--flame);
+  background: var(--pine);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.22s var(--ease);
@@ -202,7 +233,6 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--paper);
   transition: background 0.2s, color 0.2s, transform 0.2s var(--ease);
 }
-.nav__link--cta:hover { background: var(--flame); color: var(--ink); }
 .nav__link--cta.is-active { color: var(--paper); }
 
 .nav-toggle {
@@ -230,24 +260,53 @@ img { max-width: 100%; height: auto; display: block; }
 .nav-toggle[aria-expanded="true"] .nav-toggle__bars i:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
 
 /* ------------------------------------------------------------------ hero */
+/* The hero is the one dark block on the page. The topology animation is built
+   for a dark ground, and the contrast against the light body below gives the
+   page a clear opening beat without adding clutter. */
 .hero {
   position: relative;
-  padding-top: clamp(3rem, 8vw, 5.5rem);
-  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  background: var(--ink);
+  color: var(--paper);
+  padding-top: clamp(4.5rem, 10vw, 7.5rem);
+  padding-bottom: clamp(3rem, 7vw, 4.5rem);
 }
 /* Faint dot grid, faded out before it reaches the text. */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at 1px 1px, rgba(18, 16, 14, 0.15) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgba(244, 241, 232, 0.10) 1px, transparent 0);
   background-size: 26px 26px;
   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 60%);
   mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 60%);
   pointer-events: none;
   z-index: 0;
 }
-.hero__inner { position: relative; z-index: 1; }
+.hero__inner { position: relative; z-index: 2; }
+
+/* Hero sits on ink, so the shared light-section colours are overridden here. */
+.hero__eyebrow { color: var(--pine-light); }
+.hero .btn--ghost { color: var(--paper); border-color: var(--paper); }
+.hero .btn--ghost:hover { box-shadow: 5px 5px 0 var(--pine-light); }
+.hero .btn--primary { border-color: var(--pine); }
+.hero .btn--primary:hover { box-shadow: 5px 5px 0 var(--paper); }
+
+/* Animated topology backdrop. Held at low opacity and faded out toward the
+   bottom so the lede, buttons and credential strip stay clean to read; the
+   effect should register as texture, not as a picture competing with the type. */
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-out);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
+}
+/* script.js adds this once Vanta has actually painted, so the layer fades in
+   instead of popping. */
+.hero__canvas.is-ready { opacity: 0.85; }
+.hero__canvas canvas { display: block; }
 
 .hero__name {
   font-size: clamp(2.75rem, 11vw, 8.5rem);
@@ -263,7 +322,7 @@ img { max-width: 100%; height: auto; display: block; }
   overflow: hidden;
   padding-bottom: 0.06em;
 }
-.hero__line--accent { color: var(--flame); }
+.hero__line--accent { color: var(--pine-light); }
 
 .ch {
   display: inline-block;
@@ -296,7 +355,7 @@ img { max-width: 100%; height: auto; display: block; }
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: start;
-  border-top: 2px solid var(--ink);
+  border-top: 2px solid rgba(244, 241, 232, 0.28);
   padding-top: 2rem;
 }
 
@@ -307,7 +366,7 @@ img { max-width: 100%; height: auto; display: block; }
   letter-spacing: -0.015em;
   max-width: 40ch;
 }
-.hero__sub { color: var(--ink-2); max-width: 48ch; margin-bottom: 0; }
+.hero__sub { color: rgba(244, 241, 232, 0.72); max-width: 48ch; margin-bottom: 0; }
 
 .hero__col--actions { display: grid; gap: 1.5rem; }
 
@@ -317,11 +376,11 @@ img { max-width: 100%; height: auto; display: block; }
   gap: 0.6rem;
   margin: 0;
   padding: 0.55rem 0.9rem;
-  background: rgba(10, 92, 84, 0.09);
-  border-left: 3px solid var(--teal);
+  background: rgba(95, 180, 137, 0.12);
+  border-left: 3px solid var(--pine-light);
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--teal);
+  color: var(--pine-light);
   line-height: 1.4;
 }
 .availability__dot {
@@ -329,13 +388,13 @@ img { max-width: 100%; height: auto; display: block; }
   margin-top: 0.45em;
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: var(--teal);
+  background: var(--pine-light);
   animation: pulse 2.4s infinite;
 }
 @keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(10, 92, 84, 0.55); }
-  70%  { box-shadow: 0 0 0 9px rgba(10, 92, 84, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(10, 92, 84, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(95, 180, 137, 0.55); }
+  70%  { box-shadow: 0 0 0 9px rgba(95, 180, 137, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(95, 180, 137, 0); }
 }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
@@ -347,14 +406,14 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 0.85rem;
 }
 .hero__links a {
-  color: var(--ink-2);
+  color: rgba(244, 241, 232, 0.72);
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(244, 241, 232, 0.24);
   padding-bottom: 2px;
   transition: color 0.18s, border-color 0.18s;
   overflow-wrap: anywhere;
 }
-.hero__links a:hover { color: var(--flame-deep); border-color: var(--flame); }
+.hero__links a:hover { color: var(--pine-light); border-color: var(--pine-light); }
 
 /* Credential strip: the four things worth knowing in the first five seconds. */
 .creds {
@@ -367,22 +426,22 @@ img { max-width: 100%; height: auto; display: block; }
   display: inline-flex;
   align-items: baseline;
   gap: 0.5rem;
-  border: 1.5px solid var(--line-hard);
+  border: 1.5px solid rgba(244, 241, 232, 0.3);
   padding: 0.5rem 0.9rem;
   font-size: 0.86rem;
   font-weight: 600;
   transition: background 0.25s var(--ease), color 0.25s var(--ease),
               transform 0.25s var(--ease);
 }
-.cred:hover { background: var(--ink); color: var(--paper); transform: translateY(-3px); }
+.cred:hover { background: var(--paper); color: var(--ink); transform: translateY(-3px); }
 .cred__k {
   font-family: var(--mono);
   font-weight: 700;
   font-size: 0.95rem;
-  color: var(--flame-deep);
+  color: var(--pine-light);
   transition: color 0.25s var(--ease);
 }
-.cred:hover .cred__k { color: var(--flame); }
+.cred:hover .cred__k { color: var(--pine-deep); }
 
 /* ----------------------------------------------------------------- stats */
 .stats {
@@ -396,7 +455,7 @@ img { max-width: 100%; height: auto; display: block; }
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--flame);
+  color: var(--pine-light);
   margin: 0 0 2rem;
 }
 .stats__grid {
@@ -404,7 +463,7 @@ img { max-width: 100%; height: auto; display: block; }
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(1.5rem, 4vw, 3rem);
 }
-.stat { border-top: 2px solid var(--flame); padding-top: 1.1rem; }
+.stat { border-top: 2px solid var(--pine); padding-top: 1.1rem; }
 .stat__num {
   font-size: clamp(2.8rem, 6vw, 4.25rem);
   font-weight: 900;
@@ -418,13 +477,13 @@ img { max-width: 100%; height: auto; display: block; }
   font-weight: 700;
   letter-spacing: 0;
   margin-left: 0.25rem;
-  color: var(--flame);
+  color: var(--pine-light);
 }
 .stat__label {
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.45;
-  color: rgba(248, 244, 236, 0.72);
+  color: rgba(244, 241, 232, 0.72);
 }
 
 /* -------------------------------------------------------- section header */
@@ -449,6 +508,8 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .section__head.is-visible::after { transform: scaleX(1); }
 .section__head--dark::after { background: var(--line-dark); }
+/* On the dark sections the deep pine would vanish; use the light one. */
+.section--dark .section__num { color: var(--pine-light); }
 .no-js .section__head::after,
 html:not(.js) .section__head::after { transform: scaleX(1); }
 
@@ -456,7 +517,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-family: var(--mono);
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--flame);
+  color: var(--pine-deep);
   margin: 0;
   padding-top: 0.2rem;
 }
@@ -481,7 +542,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   color: var(--ink);
   line-height: 1.4;
   letter-spacing: -0.018em;
-  border-left: 4px solid var(--flame);
+  border-left: 4px solid var(--pine);
   padding-left: 1.25rem;
   margin-bottom: 1.6rem;
 }
@@ -499,7 +560,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--flame);
+  color: var(--pine-light);
   margin-bottom: 1.35rem;
 }
 .deflist { margin: 0; display: grid; gap: 1.1rem; }
@@ -514,7 +575,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(248, 244, 236, 0.6);
+  color: rgba(244, 241, 232, 0.6);
 }
 .deflist dd { margin: 0; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
 
@@ -555,17 +616,17 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   text-align: left;
   color: var(--ink-2);
   border: 1px solid var(--line);
-  background: rgba(18, 16, 14, 0.03);
+  background: rgba(19, 26, 21, 0.03);
   padding: 0.35rem 0.7rem;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s, color 0.2s,
               transform 0.2s var(--ease);
 }
-.skill-card:hover .tag { border-color: rgba(255, 61, 0, 0.35); }
+.skill-card:hover .tag { border-color: rgba(27, 115, 80, 0.35); }
 .tag:hover {
-  background: var(--flame);
-  color: var(--ink);
-  border-color: var(--flame);
+  background: var(--pine);
+  color: var(--paper);
+  border-color: var(--pine);
   transform: translateY(-2px);
 }
 /* The skill currently shown in the panel. */
@@ -574,7 +635,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   color: var(--paper);
   border-color: var(--ink);
 }
-.tag[aria-current="true"]:hover { background: var(--flame); color: var(--ink); border-color: var(--flame); }
+.tag[aria-current="true"]:hover { background: var(--pine); color: var(--paper); border-color: var(--pine); }
 
 /* ---- provenance panel ---- */
 .skills__wrap { position: relative; }
@@ -586,9 +647,9 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   margin-bottom: clamp(1.25rem, 3vw, 2rem);
   background: var(--ink);
   color: var(--paper);
-  border-left: 5px solid var(--flame);
+  border-left: 5px solid var(--pine);
   padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.1rem, 3vw, 1.75rem);
-  box-shadow: 0 14px 34px rgba(18, 16, 14, 0.16);
+  box-shadow: 0 14px 34px rgba(19, 26, 21, 0.16);
 }
 /* Without JavaScript the buttons cannot do anything, so do not promise it. */
 .prov { display: none; }
@@ -597,12 +658,12 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
 .prov__hint {
   margin: 0;
   font-size: 0.92rem;
-  color: rgba(248, 244, 236, 0.75);
+  color: rgba(244, 241, 232, 0.75);
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
 }
-.prov__hintmark { color: var(--flame); font-size: 1.05rem; flex: 0 0 auto; }
+.prov__hintmark { color: var(--pine-light); font-size: 1.05rem; flex: 0 0 auto; }
 
 .prov__skill {
   margin: 0 0 0.3rem;
@@ -616,7 +677,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--flame);
+  color: var(--pine-light);
 }
 .prov__quote {
   margin: 0 0 0.7rem;
@@ -632,7 +693,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(248, 244, 236, 0.55);
+  color: rgba(244, 241, 232, 0.55);
 }
 /* Fades the swapped-in content so the change is noticeable but not jumpy. */
 .prov__inner { animation: provIn 0.35s var(--ease-out); }
@@ -657,7 +718,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   position: absolute;
   top: -5px; left: 0;
   width: 9px; height: 9px;
-  background: var(--flame);
+  background: var(--pine);
   transition: transform 0.35s var(--ease);
 }
 .role:hover::before { transform: scale(1.7) rotate(45deg); }
@@ -672,7 +733,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: var(--amber);
+  background: var(--copper);
   color: var(--ink);
   padding: 0.25rem 0.5rem;
   font-weight: 700;
@@ -683,7 +744,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-weight: 800;
   margin-bottom: 0.4rem;
 }
-.role__org { font-weight: 600; color: var(--flame-deep); margin-bottom: 1.15rem; }
+.role__org { font-weight: 600; color: var(--pine-deep); margin-bottom: 1.15rem; }
 
 .bullets { display: grid; gap: 0.7rem; }
 .bullets li {
@@ -697,7 +758,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   position: absolute;
   left: 0; top: 0.62em;
   width: 0.6rem; height: 2px;
-  background: var(--flame);
+  background: var(--pine);
   transition: width 0.25s var(--ease);
 }
 .bullets li:hover::before { width: 1rem; }
@@ -715,8 +776,8 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   color: var(--ink-2);
-  background: rgba(255, 61, 0, 0.08);
-  border: 1px solid rgba(255, 61, 0, 0.25);
+  background: rgba(27, 115, 80, 0.08);
+  border: 1px solid rgba(27, 115, 80, 0.25);
   padding: 0.3rem 0.6rem;
 }
 
@@ -731,7 +792,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   position: relative;
   background: var(--paper);
   border: 1.5px solid var(--line-hard);
-  border-top: 6px solid var(--flame);
+  border-top: 6px solid var(--pine);
   padding: clamp(1.4rem, 3vw, 2rem);
   overflow: hidden;
 }
@@ -741,7 +802,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--flame-deep);
+  color: var(--pine-deep);
   margin-bottom: 0.85rem;
 }
 .edu-card__degree {
@@ -795,8 +856,8 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   display: grid;
   place-items: center;
   width: 1.9rem; height: 1.9rem;
-  background: var(--flame);
-  color: var(--ink);
+  background: var(--pine);
+  color: var(--paper);
   font-size: 1rem;
   font-weight: 700;
   transition: transform 0.35s var(--ease);
@@ -839,7 +900,7 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(248, 244, 236, 0.6);
+  color: rgba(244, 241, 232, 0.6);
 }
 .contact__value {
   font-size: clamp(1rem, 2vw, 1.2rem);
@@ -849,11 +910,11 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   overflow-wrap: anywhere;
   transition: color 0.18s;
 }
-a.contact__value:hover { color: var(--flame); }
-.contact__value--plain { color: rgba(248, 244, 236, 0.9); }
+a.contact__value:hover { color: var(--pine-light); }
+.contact__value--plain { color: rgba(244, 241, 232, 0.9); }
 
 .contact-form {
-  background: rgba(248, 244, 236, 0.05);
+  background: rgba(244, 241, 232, 0.05);
   border: 1px solid var(--line-dark);
   padding: clamp(1.5rem, 3.5vw, 2.25rem);
   display: grid;
@@ -866,31 +927,31 @@ a.contact__value:hover { color: var(--flame); }
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(248, 244, 236, 0.7);
+  color: rgba(244, 241, 232, 0.7);
 }
 .field input, .field textarea {
   width: 100%;
   font-family: inherit;
   font-size: 1rem;
   color: var(--paper);
-  background: rgba(18, 16, 14, 0.5);
+  background: rgba(19, 26, 21, 0.5);
   border: 1.5px solid var(--line-dark);
   padding: 0.7rem 0.85rem;
   transition: border-color 0.18s, background 0.18s;
 }
 .field textarea { resize: vertical; min-height: 6rem; }
 .field input:focus, .field textarea:focus {
-  border-color: var(--flame);
-  background: rgba(18, 16, 14, 0.75);
+  border-color: var(--pine);
+  background: rgba(19, 26, 21, 0.75);
 }
-.field.has-error input, .field.has-error textarea { border-color: var(--amber); }
-.field__error { font-size: 0.8rem; color: var(--amber); font-weight: 600; }
-.contact-form__note { margin: 0; font-size: 0.83rem; color: rgba(248, 244, 236, 0.6); }
+.field.has-error input, .field.has-error textarea { border-color: var(--copper); }
+.field__error { font-size: 0.8rem; color: var(--copper); font-weight: 600; }
+.contact-form__note { margin: 0; font-size: 0.83rem; color: rgba(244, 241, 232, 0.6); }
 
 /* ---------------------------------------------------------------- footer */
 .site-footer {
   background: var(--ink);
-  color: rgba(248, 244, 236, 0.6);
+  color: rgba(244, 241, 232, 0.6);
   border-top: 1px solid var(--line-dark);
   padding-block: 2rem;
   font-size: 0.85rem;
@@ -905,7 +966,7 @@ a.contact__value:hover { color: var(--flame); }
 .site-footer p { margin: 0; }
 .site-footer__meta { font-family: var(--mono); font-size: 0.78rem; }
 .site-footer__top { text-decoration: none; font-weight: 600; color: var(--paper); transition: color 0.18s; }
-.site-footer__top:hover { color: var(--flame); }
+.site-footer__top:hover { color: var(--pine-light); }
 
 /* --------------------------------------------------------------- buttons */
 .btn {
@@ -921,17 +982,17 @@ a.contact__value:hover { color: var(--flame); }
   cursor: pointer;
   transition: box-shadow 0.2s var(--ease), background 0.2s, color 0.2s;
 }
-.btn--primary { background: var(--flame); color: var(--ink); }
+.btn--primary { background: var(--pine); color: var(--paper); }
 .btn--primary:hover { box-shadow: 5px 5px 0 var(--ink); }
 .btn--ghost { background: transparent; color: var(--ink); }
-.btn--ghost:hover { box-shadow: 5px 5px 0 var(--flame); }
+.btn--ghost:hover { box-shadow: 5px 5px 0 var(--pine); }
 .btn--solid {
-  background: var(--flame); color: var(--ink);
-  border-color: var(--flame); justify-self: start;
+  background: var(--pine); color: var(--paper);
+  border-color: var(--pine); justify-self: start;
 }
 .btn--solid:hover { box-shadow: 5px 5px 0 var(--paper); }
 .btn--wide { justify-self: start; }
-.section--dark .btn--primary { border-color: var(--flame); }
+.section--dark .btn--primary { border-color: var(--pine); }
 .section--dark .btn--primary:hover { box-shadow: 5px 5px 0 var(--paper); }
 .btn__meta { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; opacity: 0.65; }
 
@@ -952,15 +1013,15 @@ a.contact__value:hover { color: var(--flame); }
   inset: 0;
   pointer-events: none;
   background: radial-gradient(380px circle at var(--mx) var(--my),
-              rgba(255, 61, 0, 0.13), transparent 62%);
+              rgba(27, 115, 80, 0.13), transparent 62%);
   opacity: 0;
   transition: opacity 0.3s var(--ease);
 }
 [data-tilt]:hover::after { opacity: 1; }
 .skill-card[data-tilt]:hover,
 .edu-card[data-tilt]:hover,
-.cert[data-tilt]:hover { box-shadow: 10px 10px 0 rgba(18, 16, 14, 0.9); }
-.about__card[data-tilt]:hover { box-shadow: 10px 10px 0 var(--flame); }
+.cert[data-tilt]:hover { box-shadow: 10px 10px 0 rgba(19, 26, 21, 0.9); }
+.about__card[data-tilt]:hover { box-shadow: 10px 10px 0 var(--pine); }
 
 /* Scroll reveal. Only hidden when JS is present, so a no-JS visitor still
    sees the whole page. */
@@ -981,7 +1042,7 @@ a.contact__value:hover { color: var(--flame); }
     background: var(--paper);
     border-bottom: 2px solid var(--ink);
     display: none;
-    box-shadow: 0 18px 40px rgba(18, 16, 14, 0.1);
+    box-shadow: 0 18px 40px rgba(19, 26, 21, 0.1);
   }
   .nav.is-open { display: block; }
   .nav__list {
@@ -991,6 +1052,13 @@ a.contact__value:hover { color: var(--flame); }
     padding: 0.5rem var(--gutter) 1.25rem;
   }
   .nav__link { padding: 0.9rem 0; font-size: 1.05rem; border-bottom: 1px solid var(--line); }
+  /* The dropdown panel is paper-coloured whatever state the bar is in, so its
+     links must stay dark even while the bar itself is transparent. */
+  .site-header .nav__link,
+  .site-header.is-stuck .nav__link { color: var(--ink-2); }
+  .site-header .nav__link.is-active { color: var(--pine-deep); }
+  .site-header .nav__link--cta,
+  .site-header.is-stuck .nav__link--cta { background: var(--ink); color: var(--paper); }
   .nav__link--cta { margin: 0.85rem 0 0; text-align: center; padding: 0.9rem 1rem; border-bottom: 0; }
   .nav__link:not(.nav__link--cta)::after { display: none; }
   .site-header__inner { position: relative; }
@@ -1030,6 +1098,7 @@ a.contact__value:hover { color: var(--flame); }
 /* Honour the operating-system "reduce motion" setting. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .hero__canvas { display: none; }
   .js .ch { transform: none; animation: none; }
   .js .hero__eyebrow, .js .hero__grid, .js .creds { opacity: 1; animation: none; }
   .availability__dot { animation: none; }
@@ -1048,7 +1117,7 @@ a.contact__value:hover { color: var(--flame); }
 /* ----------------------------------------------------------------- print */
 @media print {
   .site-header, .nav-toggle, .contact-form, .site-footer__top,
-  .btn, .progress { display: none !important; }
+  .btn, .progress, .hero__canvas { display: none !important; }
   body { background: #fff; color: #000; }
   .section--dark, .stats, .about__card { background: #fff !important; color: #000 !important; }
   .contact__label, .contact__value, .deflist dt, .deflist dd,

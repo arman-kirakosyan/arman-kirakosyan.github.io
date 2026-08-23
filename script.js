@@ -52,8 +52,15 @@
     var header = document.getElementById("siteHeader");
     var bar = document.getElementById("progress");
 
+    var hero = document.querySelector(".hero");
+
     function update() {
-      if (header) header.classList.toggle("is-stuck", window.scrollY > 12);
+      // Flip the bar to its light state once the dark hero is nearly past,
+      // not after a few pixels, or light-on-light text would be unreadable.
+      if (header) {
+        var trigger = hero ? hero.offsetHeight - header.offsetHeight - 8 : 12;
+        header.classList.toggle("is-stuck", window.scrollY > trigger);
+      }
       if (bar) {
         var max = document.documentElement.scrollHeight - window.innerHeight;
         bar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
@@ -277,6 +284,67 @@
     });
   }
 
+  /* Animated hero backdrop ---------------------------------------------
+     Vanta's topology effect, which draws drifting contour lines. It reads as
+     a topographic map, which suits Marquette.
+
+     Everything about it is optional. The libraries load deferred from a CDN,
+     so if either fails, is blocked, or the visitor has asked for reduced
+     motion, this function simply returns and the static hero stands on its
+     own. Nothing else on the page depends on it. */
+  function initHeroBackdrop() {
+    var el = document.getElementById("heroCanvas");
+    if (!el) return;
+
+    // Never run it for someone who has asked the OS to reduce motion.
+    if (motionQuery.matches) return;
+
+    // Respect metered and slow connections: p5 is about a megabyte, which is
+    // not worth spending on decoration.
+    var conn = navigator.connection;
+    if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
+
+    var tries = 0;
+    (function waitForVanta() {
+      if (window.VANTA && window.VANTA.TOPOLOGY && window.p5) {
+        try {
+          window.__heroVanta = window.VANTA.TOPOLOGY({
+            el: el,
+            mouseControls: true,
+            touchControls: false,   // leave vertical scrolling alone on phones
+            gyroControls: false,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            color: 0x5fb489,        // --pine-light, so the strands read on ink
+            backgroundColor: 0x131a15  // must match --ink exactly or the edge seams
+          });
+          el.classList.add("is-ready");
+        } catch (e) {
+          // A WebGL/canvas failure must not take the rest of the page down.
+        }
+        return;
+      }
+      // Deferred scripts land after DOMContentLoaded; poll briefly, then stop.
+      if (++tries < 60) window.setTimeout(waitForVanta, 100);
+    })();
+
+    // Pause the animation whenever the hero is off screen, so it is not
+    // burning CPU while someone reads the rest of the page.
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        var v = window.__heroVanta;
+        if (!v) return;
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { if (v.resize) v.resize(); if (v.play) v.play(); }
+          else if (v.pause) v.pause();
+        });
+      }, { threshold: 0 });
+      io.observe(el);
+    }
+  }
+
   /* Contact form ------------------------------------------------------- */
   function initContactForm() {
     var form = document.getElementById("contactForm");
@@ -341,6 +409,7 @@
   initCounters();
   initTilt();
   initMagnetic();
+  initHeroBackdrop();
   initSkillProvenance();
   initContactForm();
   initYear();

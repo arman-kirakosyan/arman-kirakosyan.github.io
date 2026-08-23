@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#12100E" />
+  <meta name="theme-color" content="#131A15" />
 
   <title>Arman Kirakosyan — Marketing Graduate</title>
   <meta name="description" content="Marketing graduate in Marquette, Michigan. 18 months running social media channels and producing digital content for a university department. Google Ads certified in Shopping, Apps, and Display, and HubSpot certified in inbound sales and social media." />
@@ -18,7 +18,7 @@
   <!-- <meta property="og:image" content="https://arman-kirakosyan.github.io/share-image.jpg" /> -->
   <!-- <meta name="twitter:card" content="summary_large_image" /> -->
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23FF3D00'/%3E%3Ctext x='50' y='72' font-family='Helvetica,Arial,sans-serif' font-weight='bold' font-size='58' fill='%2312100E' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231B7350'/%3E%3Ctext x='50' y='72' font-family='Helvetica,Arial,sans-serif' font-weight='bold' font-size='58' fill='%23F4F1E8' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,7 +28,7 @@
        these files for 10 minutes, so without it an edit can appear not to have
        deployed. Bump the number whenever styles.css or script.js changes and
        browsers are forced to fetch the new file instead of a stale copy. -->
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=3" />
   <script>document.documentElement.classList.add("js");</script>
 </head>
 
@@ -63,6 +63,9 @@
   <main id="main">
 
     <section class="hero" id="top">
+      <!-- Vanta topology animation is mounted here. Decorative only: the hero
+           reads exactly the same if the libraries never load. -->
+      <div class="hero__canvas" id="heroCanvas" aria-hidden="true"></div>
       <div class="container hero__inner">
         <p class="eyebrow hero__eyebrow">Marketing Graduate <span aria-hidden="true">&middot;</span> Marquette, Michigan</p>
 
@@ -597,6 +600,12 @@
     </div>
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <!-- Animated hero backdrop. Deferred so neither file blocks first paint,
+       and both are optional: script.js checks for VANTA before using it, so a
+       CDN outage or a blocked domain simply leaves the static hero in place.
+       p5 is ~1MB, which is the whole cost of the effect; vanta.topology is 10KB. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
