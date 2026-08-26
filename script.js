@@ -47,10 +47,9 @@
     });
   }
 
-  /* Sticky header border + scroll progress bar ------------------------- */
+  /* Sticky header border ----------------------------------------------- */
   function initScrollChrome() {
     var header = document.getElementById("siteHeader");
-    var bar = document.getElementById("progress");
 
     var hero = document.querySelector(".hero");
 
@@ -60,10 +59,6 @@
       if (header) {
         var trigger = hero ? hero.offsetHeight - header.offsetHeight - 8 : 12;
         header.classList.toggle("is-stuck", window.scrollY > trigger);
-      }
-      if (bar) {
-        var max = document.documentElement.scrollHeight - window.innerHeight;
-        bar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
       }
     }
     update();
@@ -125,38 +120,6 @@
     sections.forEach(function (s) { observer.observe(s); });
   }
 
-  /* Counting numbers in the stats band --------------------------------- */
-  function initCounters() {
-    var nums = Array.prototype.slice.call(document.querySelectorAll("[data-count]"));
-    if (!nums.length) return;
-    if (reduceMotion || !("IntersectionObserver" in window)) return; // leave the final value in place
-
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        var el = entry.target;
-        observer.unobserve(el);
-
-        var target = parseInt(el.getAttribute("data-count"), 10);
-        if (isNaN(target)) return;
-        var start = performance.now();
-        var duration = 1100;
-
-        function frame(now) {
-          var p = Math.min(1, (now - start) / duration);
-          var eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = String(Math.round(target * eased));
-          if (p < 1) requestAnimationFrame(frame);
-          else el.textContent = String(target);
-        }
-        el.textContent = "0";
-        requestAnimationFrame(frame);
-      });
-    }, { threshold: 0.5 });
-
-    nums.forEach(function (n) { observer.observe(n); });
-  }
-
   /* Cards lean toward the pointer -------------------------------------- */
   function initTilt() {
     var MAX_DEG = 5;
@@ -179,21 +142,6 @@
         card.style.setProperty("--rx", "0deg");
         card.style.setProperty("--ry", "0deg");
       });
-    });
-  }
-
-  /* Buttons drift slightly toward the pointer -------------------------- */
-  function initMagnetic() {
-    document.querySelectorAll("[data-magnetic]").forEach(function (el) {
-      el.addEventListener("pointermove", function (e) {
-        if (!isMouse(e)) return;
-        var r = el.getBoundingClientRect();
-        var dx = e.clientX - (r.left + r.width / 2);
-        var dy = e.clientY - (r.top + r.height / 2);
-        el.style.transform = "translate(" + (dx * 0.15).toFixed(1) + "px," +
-                                            (dy * 0.25).toFixed(1) + "px)";
-      });
-      el.addEventListener("pointerleave", function () { el.style.transform = ""; });
     });
   }
 
@@ -285,13 +233,8 @@
   }
 
   /* Animated hero backdrop ---------------------------------------------
-     Vanta's topology effect, which draws drifting contour lines. It reads as
-     a topographic map, which suits Marquette.
-
-     Everything about it is optional. The libraries load deferred from a CDN,
-     so if either fails, is blocked, or the visitor has asked for reduced
-     motion, this function simply returns and the static hero stands on its
-     own. Nothing else on the page depends on it. */
+     Decorative. The hero reads exactly the same if p5 or Vanta never load,
+     so every failure path here just leaves the static hero in place. */
   function initHeroBackdrop() {
     var el = document.getElementById("heroCanvas");
     if (!el) return;
@@ -304,31 +247,77 @@
     var conn = navigator.connection;
     if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
 
+    var paused = false;        // the effect's frame loop has been cancelled
+    var pendingBuild = false;  // a rebuild is owed once the hero is on screen
+    var onScreen = true;
+    var lastW = 0, lastH = 0;
+
+    function build() {
+      try {
+        window.__heroVanta = window.VANTA.TOPOLOGY({
+          el: el,
+          mouseControls: true,
+          touchControls: false,   // leave vertical scrolling alone on phones
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          color: 0x5fb489,        // --pine-light, so the strands read on ink
+          backgroundColor: 0x131a15  // must match --ink exactly or the edge seams
+        });
+      } catch (e) {
+        return;  // a WebGL/canvas failure must not take the rest of the page down
+      }
+      el.classList.add("is-ready");
+      lastW = el.offsetWidth;
+      lastH = el.offsetHeight;
+      paused = false;
+      pendingBuild = false;
+    }
+
+    function teardown() {
+      var v = window.__heroVanta;
+      window.__heroVanta = null;
+      if (v && typeof v.destroy === "function") {
+        try { v.destroy(); } catch (e) { /* nothing useful left to do */ }
+      }
+    }
+
     var tries = 0;
     (function waitForVanta() {
-      if (window.VANTA && window.VANTA.TOPOLOGY && window.p5) {
-        try {
-          window.__heroVanta = window.VANTA.TOPOLOGY({
-            el: el,
-            mouseControls: true,
-            touchControls: false,   // leave vertical scrolling alone on phones
-            gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
-            scale: 1.0,
-            scaleMobile: 1.0,
-            color: 0x5fb489,        // --pine-light, so the strands read on ink
-            backgroundColor: 0x131a15  // must match --ink exactly or the edge seams
-          });
-          el.classList.add("is-ready");
-        } catch (e) {
-          // A WebGL/canvas failure must not take the rest of the page down.
-        }
-        return;
-      }
+      if (window.VANTA && window.VANTA.TOPOLOGY && window.p5) { build(); return; }
       // Deferred scripts land after DOMContentLoaded; poll briefly, then stop.
       if (++tries < 60) window.setTimeout(waitForVanta, 100);
     })();
+
+    // Rebuild the effect when the hero actually changes size.
+    //
+    // Vanta's topology sketch reads the element's width and height once, in
+    // onInit, and builds its particle grid from them. resize() only passes the
+    // new size to p5.resizeCanvas, which reallocates the drawing buffer -- it
+    // cannot regenerate that grid, and onInit never runs again. So after a
+    // resize the pattern is still laid out for the old dimensions and no
+    // longer fits the canvas. Destroying and re-creating is the only way to
+    // get a pattern that matches.
+    //
+    // Debounced, because dragging a window edge fires this continuously, and
+    // gated on a real change so that a phone's address bar sliding away (a
+    // height-only change of a few dozen pixels) does not throw the effect out.
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function () {
+        if (!window.__heroVanta && !pendingBuild) return;
+        var w = el.offsetWidth, h = el.offsetHeight;
+        if (w === lastW && Math.abs(h - lastH) < 120) return;
+        teardown();
+        lastW = w;
+        lastH = h;
+        // Rebuilding off screen would start a loop nobody can see, so defer it.
+        if (onScreen) build(); else pendingBuild = true;
+      }, 250);
+    });
 
     // Stop the animation while the hero is off screen, so it is not burning
     // CPU and battery for someone reading the rest of the page.
@@ -344,14 +333,18 @@
     //
     // .animationLoop() re-schedules itself, so calling it while the loop is
     // already running leaves two loops racing. Hence the explicit flag.
-    var canToggle = typeof el.ownerDocument.defaultView.requestAnimationFrame === "function";
-    if ("IntersectionObserver" in window && canToggle) {
-      var paused = false;
+    if ("IntersectionObserver" in window &&
+        typeof window.requestAnimationFrame === "function") {
       var io = new IntersectionObserver(function (entries) {
-        var v = window.__heroVanta;
-        if (!v || typeof v.animationLoop !== "function") return;
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
+          onScreen = entry.isIntersecting;
+
+          if (onScreen && pendingBuild) { build(); return; }
+
+          var v = window.__heroVanta;
+          if (!v || typeof v.animationLoop !== "function") return;
+
+          if (onScreen) {
             if (!paused) return;
             paused = false;
             try { v.animationLoop(); } catch (e) { /* leave it stopped */ }
@@ -427,9 +420,7 @@
   initScrollChrome();
   initReveal();
   initScrollSpy();
-  initCounters();
   initTilt();
-  initMagnetic();
   initHeroBackdrop();
   initSkillProvenance();
   initContactForm();

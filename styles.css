@@ -25,8 +25,8 @@
   --line-hard:   rgba(19, 26, 21, 0.88);
   --line-dark:   rgba(244, 241, 232, 0.18);
 
-  --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "Schibsted Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --maxw:      1180px;
   --gutter:    clamp(1.25rem, 5vw, 4rem);
@@ -97,18 +97,6 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 0.85rem;
 }
 .skip-link:focus { left: 0.5rem; top: 0.5rem; }
-
-/* Scroll position indicator pinned to the very top of the viewport. */
-.progress {
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: var(--pine);
-  transform: scaleX(0);
-  transform-origin: left;
-  z-index: 200;
-  will-change: transform;
-}
 
 /* ---------------------------------------------------------------- layout */
 .container {
@@ -299,6 +287,9 @@ img { max-width: 100%; height: auto; display: block; }
   inset: 0;
   z-index: 1;
   opacity: 0;
+  /* Belt and braces: if the canvas and its box ever disagree about size,
+     the excess is clipped here instead of spilling over the page. */
+  overflow: hidden;
   transition: opacity 1.2s var(--ease-out);
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
@@ -316,26 +307,13 @@ img { max-width: 100%; height: auto; display: block; }
   text-transform: uppercase;
   margin-bottom: clamp(2rem, 5vw, 3rem);
 }
-/* Each line clips its own letters so they rise into view from behind it. */
 .hero__line {
   display: block;
-  overflow: hidden;
   padding-bottom: 0.06em;
 }
 .hero__line--accent { color: var(--pine-light); }
 
-.ch {
-  display: inline-block;
-  will-change: transform;
-}
-.js .ch {
-  transform: translateY(105%);
-  animation: chRise 0.85s var(--ease-out) forwards;
-  animation-delay: calc(var(--i) * 38ms + 120ms);
-}
-@keyframes chRise { to { transform: translateY(0); } }
-
-/* Everything under the name fades up once, slightly after the letters. */
+/* Everything under the name fades up once, in sequence. */
 .js .hero__eyebrow,
 .js .hero__grid,
 .js .creds {
@@ -376,25 +354,11 @@ img { max-width: 100%; height: auto; display: block; }
   gap: 0.6rem;
   margin: 0;
   padding: 0.55rem 0.9rem;
-  background: rgba(95, 180, 137, 0.12);
   border-left: 3px solid var(--pine-light);
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--pine-light);
   line-height: 1.4;
-}
-.availability__dot {
-  flex: 0 0 auto;
-  margin-top: 0.45em;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--pine-light);
-  animation: pulse 2.4s infinite;
-}
-@keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(95, 180, 137, 0.55); }
-  70%  { box-shadow: 0 0 0 9px rgba(95, 180, 137, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(95, 180, 137, 0); }
 }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
@@ -509,18 +473,9 @@ img { max-width: 100%; height: auto; display: block; }
 .section__head.is-visible::after { transform: scaleX(1); }
 .section__head--dark::after { background: var(--line-dark); }
 /* On the dark sections the deep pine would vanish; use the light one. */
-.section--dark .section__num { color: var(--pine-light); }
 .no-js .section__head::after,
 html:not(.js) .section__head::after { transform: scaleX(1); }
 
-.section__num {
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--pine-deep);
-  margin: 0;
-  padding-top: 0.2rem;
-}
 .section__title {
   font-size: clamp(2.1rem, 6vw, 3.75rem);
   font-weight: 800;
@@ -852,17 +807,6 @@ html:not(.js) .section__head::after { transform: scaleX(1); }
   padding: 1.25rem;
   overflow: hidden;
 }
-.cert__mark {
-  display: grid;
-  place-items: center;
-  width: 1.9rem; height: 1.9rem;
-  background: var(--pine);
-  color: var(--paper);
-  font-size: 1rem;
-  font-weight: 700;
-  transition: transform 0.35s var(--ease);
-}
-.cert:hover .cert__mark { transform: rotate(-10deg) scale(1.1); }
 .cert__name { font-weight: 700; font-size: 1rem; line-height: 1.3; letter-spacing: -0.01em; }
 .cert__issuer {
   font-family: var(--mono);
@@ -1099,9 +1043,7 @@ a.contact__value:hover { color: var(--pine-light); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero__canvas { display: none; }
-  .js .ch { transform: none; animation: none; }
   .js .hero__eyebrow, .js .hero__grid, .js .creds { opacity: 1; animation: none; }
-  .availability__dot { animation: none; }
   .section__head::after { transform: scaleX(1); transition: none; }
   [data-tilt] { transform: none !important; }
   [data-tilt]::after { display: none; }
@@ -1117,12 +1059,11 @@ a.contact__value:hover { color: var(--pine-light); }
 /* ----------------------------------------------------------------- print */
 @media print {
   .site-header, .nav-toggle, .contact-form, .site-footer__top,
-  .btn, .progress, .hero__canvas { display: none !important; }
+  .btn, .hero__canvas { display: none !important; }
   body { background: #fff; color: #000; }
   .section--dark, .stats, .about__card { background: #fff !important; color: #000 !important; }
   .contact__label, .contact__value, .deflist dt, .deflist dd,
   .stat__label, .stats__eyebrow { color: #000 !important; }
-  .js .ch { transform: none !important; animation: none !important; }
   .js .hero__eyebrow, .js .hero__grid, .js .creds { opacity: 1 !important; animation: none !important; }
   .js [data-reveal] { opacity: 1 !important; transform: none !important; }
   .section__head::after { transform: scaleX(1) !important; }

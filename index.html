@@ -22,19 +22,18 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet" />
 
   <!-- The ?v= token is a cache buster. GitHub Pages tells browsers to hold
        these files for 10 minutes, so without it an edit can appear not to have
        deployed. Bump the number whenever styles.css or script.js changes and
        browsers are forced to fetch the new file instead of a stale copy. -->
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=5" />
   <script>document.documentElement.classList.add("js");</script>
 </head>
 
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
-  <div class="progress" id="progress" aria-hidden="true"></div>
 
   <header class="site-header" id="siteHeader">
     <div class="container site-header__inner">
@@ -54,7 +53,7 @@
           <li><a class="nav__link" href="#skills">Skills</a></li>
           <li><a class="nav__link" href="#experience">Experience</a></li>
           <li><a class="nav__link" href="#education">Education</a></li>
-          <li><a class="nav__link nav__link--cta" data-magnetic href="#contact">Get in touch</a></li>
+          <li><a class="nav__link nav__link--cta" href="#contact">Get in touch</a></li>
         </ul>
       </nav>
     </div>
@@ -70,9 +69,8 @@
         <p class="eyebrow hero__eyebrow">Marketing Graduate <span aria-hidden="true">&middot;</span> Marquette, Michigan</p>
 
         <h1 class="hero__name">
-          <span class="sr-only">Arman Kirakosyan</span>
-          <span class="hero__line" aria-hidden="true"><span class="ch" style="--i:0">A</span><span class="ch" style="--i:1">R</span><span class="ch" style="--i:2">M</span><span class="ch" style="--i:3">A</span><span class="ch" style="--i:4">N</span></span>
-          <span class="hero__line hero__line--accent" aria-hidden="true"><span class="ch" style="--i:5">K</span><span class="ch" style="--i:6">I</span><span class="ch" style="--i:7">R</span><span class="ch" style="--i:8">A</span><span class="ch" style="--i:9">K</span><span class="ch" style="--i:10">O</span><span class="ch" style="--i:11">S</span><span class="ch" style="--i:12">Y</span><span class="ch" style="--i:13">A</span><span class="ch" style="--i:14">N</span></span>
+          <span class="hero__line">Arman</span>
+          <span class="hero__line hero__line--accent">Kirakosyan</span>
         </h1>
 
         <div class="hero__grid">
@@ -90,13 +88,12 @@
 
           <div class="hero__col hero__col--actions">
             <p class="availability">
-              <span class="availability__dot" aria-hidden="true"></span>
               Available for entry-level marketing or sales roles in Marquette
             </p>
 
             <div class="btn-row">
-              <a class="btn btn--primary" data-magnetic href="#contact">Get in touch</a>
-              <a class="btn btn--ghost" data-magnetic href="resume.pdf" download>
+              <a class="btn btn--primary" href="#contact">Get in touch</a>
+              <a class="btn btn--ghost" href="resume.pdf" download>
                 Resume <span class="btn__meta">PDF</span>
               </a>
             </div>
@@ -122,19 +119,19 @@
         <p class="stats__eyebrow">The short version</p>
         <div class="stats__grid">
           <div class="stat" data-reveal>
-            <p class="stat__num"><span data-count="18">18</span><span class="stat__unit">mo</span></p>
+            <p class="stat__num">18<span class="stat__unit">mo</span></p>
             <p class="stat__label">Running social channels for a university department</p>
           </div>
           <div class="stat" data-reveal>
-            <p class="stat__num"><span data-count="5">5</span></p>
+            <p class="stat__num">5</p>
             <p class="stat__label">Certifications from Google and HubSpot Academy</p>
           </div>
           <div class="stat" data-reveal>
-            <p class="stat__num"><span data-count="9">9</span><span class="stat__unit">yrs</span></p>
+            <p class="stat__num">9<span class="stat__unit">yrs</span></p>
             <p class="stat__label">Officiating soccer for the U.S. Soccer Federation</p>
           </div>
           <div class="stat" data-reveal>
-            <p class="stat__num"><span data-count="2">2</span></p>
+            <p class="stat__num">2</p>
             <p class="stat__label">Languages spoken fluently: English and Armenian</p>
           </div>
         </div>
@@ -144,7 +141,6 @@
     <section class="section" id="about">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__num">01</p>
           <h2 class="section__title">About</h2>
         </header>
 
@@ -199,7 +195,6 @@
     <section class="section section--alt" id="skills">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__num">02</p>
           <h2 class="section__title">Skills</h2>
         </header>
 
@@ -401,7 +396,6 @@
     <section class="section" id="experience">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__num">03</p>
           <h2 class="section__title">Experience</h2>
         </header>
 
@@ -473,7 +467,6 @@
     <section class="section section--alt" id="education">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__num">04</p>
           <h2 class="section__title">Education &amp; Certifications</h2>
         </header>
 
@@ -500,27 +493,22 @@
           </div>
           <ul class="certs__list">
             <li class="cert" data-tilt>
-              <span class="cert__mark" aria-hidden="true">&#10003;</span>
               <span class="cert__name">AI-Powered Shopping Ads Certification</span>
               <span class="cert__issuer">Google</span>
             </li>
             <li class="cert" data-tilt>
-              <span class="cert__mark" aria-hidden="true">&#10003;</span>
               <span class="cert__name">Google Ads Apps Certification</span>
               <span class="cert__issuer">Google</span>
             </li>
             <li class="cert" data-tilt>
-              <span class="cert__mark" aria-hidden="true">&#10003;</span>
               <span class="cert__name">Google Ads Display Certification</span>
               <span class="cert__issuer">Google</span>
             </li>
             <li class="cert" data-tilt>
-              <span class="cert__mark" aria-hidden="true">&#10003;</span>
               <span class="cert__name">Inbound Sales Certified</span>
               <span class="cert__issuer">HubSpot Academy</span>
             </li>
             <li class="cert" data-tilt>
-              <span class="cert__mark" aria-hidden="true">&#10003;</span>
               <span class="cert__name">Social Media Certified</span>
               <span class="cert__issuer">HubSpot Academy</span>
             </li>
@@ -532,7 +520,6 @@
     <section class="section section--dark" id="contact">
       <div class="container">
         <header class="section__head section__head--dark" data-reveal>
-          <p class="section__num">05</p>
           <h2 class="section__title">Contact</h2>
         </header>
 
@@ -558,7 +545,7 @@
               </li>
             </ul>
 
-            <a class="btn btn--primary btn--wide" data-magnetic href="resume.pdf" download>
+            <a class="btn btn--primary btn--wide" href="resume.pdf" download>
               Download resume <span class="btn__meta">PDF</span>
             </a>
           </div>
@@ -582,7 +569,7 @@
               <label for="cf-message">Message</label>
               <textarea id="cf-message" name="message" rows="5" required></textarea>
             </div>
-            <button class="btn btn--solid" data-magnetic type="submit">Open in email app</button>
+            <button class="btn btn--solid" type="submit">Open in email app</button>
             <p class="contact-form__note" id="formNote" role="status">
               This opens your own email app with the message ready to send.
             </p>
@@ -606,6 +593,6 @@
        p5 is ~1MB, which is the whole cost of the effect; vanta.topology is 10KB. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js"></script>
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
