@@ -234,7 +234,17 @@
 
   /* Animated hero backdrop ---------------------------------------------
      Decorative. The hero reads exactly the same if p5 or Vanta never load,
-     so every failure path here just leaves the static hero in place. */
+     so every failure path here just leaves the static hero in place.
+
+     Vanta's topology sketch has no steady state. Read its draw loop: it
+     builds a noise field once in setup and never touches it again, so the
+     particles trace the same fixed streamlines forever, and it paints 4500
+     line segments at 5% alpha every frame without ever calling background(),
+     clear() or fill(). Ink only ever goes on. Left alone it climbs to a
+     blown-out smear of bright bands, and how fast depends on the random seed
+     it picks each load. The budget below is the fix: let the pattern build,
+     then stop drawing and leave it. It also means the effect costs nothing
+     after the first twenty seconds or so. */
   function initHeroBackdrop() {
     var el = document.getElementById("heroCanvas");
     if (!el) return;
@@ -247,17 +257,26 @@
     var conn = navigator.connection;
     if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
 
-    var paused = false;        // the effect's frame loop has been cancelled
-    var pendingBuild = false;  // a rebuild is owed once the hero is on screen
+    // Roughly twenty seconds at 60fps, which is past the point where the
+    // pattern has filled in and well short of where it starts to glare.
+    var FRAME_BUDGET = 1100;
+
+    var drawn = 0;
+    var done = false;       // budget spent; the pattern is final
+    var paused = false;     // off screen, so not drawing for the moment
+    var pendingBuild = false;
     var onScreen = true;
     var lastW = 0, lastH = 0;
 
     function build() {
+      var v;
       try {
-        window.__heroVanta = window.VANTA.TOPOLOGY({
+        v = window.__heroVanta = window.VANTA.TOPOLOGY({
           el: el,
-          mouseControls: true,
-          touchControls: false,   // leave vertical scrolling alone on phones
+          // The topology draw never reads the pointer, so mouseControls buys
+          // nothing and costs a getBoundingClientRect on every scroll event.
+          mouseControls: false,
+          touchControls: false,
           gyroControls: false,
           minHeight: 200.0,
           minWidth: 200.0,
@@ -269,6 +288,27 @@
       } catch (e) {
         return;  // a WebGL/canvas failure must not take the rest of the page down
       }
+      if (!v || !v.p5) return;
+
+      // Vanta's own frame loop only advances a clock this effect never reads,
+      // so it is pure overhead here. p5 runs the drawing on its own loop.
+      try { window.cancelAnimationFrame(v.req); } catch (e) { /* not fatal */ }
+
+      // Vanta resizes by handing the new size to p5.resizeCanvas, which keeps
+      // the old pixels pinned to the top left and leaves a bright patch there.
+      // Size changes are handled by rebuilding instead, below.
+      try { window.removeEventListener("resize", v.resize); } catch (e) { /* ditto */ }
+
+      // Spend the budget, then stop. p5 calls this every frame.
+      var p5i = v.p5, sketchDraw = p5i.draw;
+      drawn = 0;
+      done = false;
+      p5i.draw = function () {
+        if (drawn >= FRAME_BUDGET) { done = true; p5i.noLoop(); return; }
+        drawn++;
+        sketchDraw();
+      };
+
       el.classList.add("is-ready");
       lastW = el.offsetWidth;
       lastH = el.offsetHeight;
@@ -314,27 +354,20 @@
         teardown();
         lastW = w;
         lastH = h;
-        // Rebuilding off screen would start a loop nobody can see, so defer it.
+        // Rebuilding off screen would spend the budget where nobody can see
+        // it, so wait until the hero is back in view.
         if (onScreen) build(); else pendingBuild = true;
       }, 250);
     });
 
-    // Stop the animation while the hero is off screen, so it is not burning
-    // CPU and battery for someone reading the rest of the page.
+    // Only draw while the hero is actually on screen, so the budget is spent
+    // in front of the visitor rather than while they read the rest of the
+    // page, and so nothing is burning CPU down there either.
     //
-    // Two traps here, both learned the hard way:
-    //
-    //   1. This build of Vanta has no pause()/play(). It does keep the handle
-    //      of the frame it scheduled on .req, so cancelling that stops the
-    //      loop, and calling .animationLoop() re-enters it.
-    //   2. Do NOT call .resize() to wake it up. resize() reallocates the p5
-    //      drawing buffer, which wipes the pattern the effect has built up.
-    //      Calling it on every scroll-back visibly degraded the effect.
-    //
-    // .animationLoop() re-schedules itself, so calling it while the loop is
-    // already running leaves two loops racing. Hence the explicit flag.
-    if ("IntersectionObserver" in window &&
-        typeof window.requestAnimationFrame === "function") {
+    // The control that matters is p5's own loop. Cancelling Vanta's
+    // requestAnimationFrame handle does NOT stop the drawing: p5 schedules its
+    // draw independently, so the sketch carries on painting either way.
+    if ("IntersectionObserver" in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           onScreen = entry.isIntersecting;
@@ -342,16 +375,16 @@
           if (onScreen && pendingBuild) { build(); return; }
 
           var v = window.__heroVanta;
-          if (!v || typeof v.animationLoop !== "function") return;
+          if (!v || !v.p5 || done) return;
 
           if (onScreen) {
             if (!paused) return;
             paused = false;
-            try { v.animationLoop(); } catch (e) { /* leave it stopped */ }
+            try { v.p5.loop(); } catch (e) { /* leave it stopped */ }
           } else {
             if (paused) return;
             paused = true;
-            try { window.cancelAnimationFrame(v.req); } catch (e) { paused = false; }
+            try { v.p5.noLoop(); } catch (e) { paused = false; }
           }
         });
       }, { threshold: 0 });
